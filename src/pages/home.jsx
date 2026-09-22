@@ -1,3 +1,7 @@
+import ArticleCard from "../components/ArticleCard.jsx";
+import SectionHeader from "../components/SectionHeader.jsx";
+
+
 function Home() {
     return (
         <>
@@ -68,16 +72,7 @@ function Home() {
   {/* Start posts-entry */}
   <section className="section posts-entry">
     <div className="container">
-      <div className="row mb-4">
-        <div className="col-sm-6">
-          <h2 className="posts-entry-title">Business</h2>
-        </div>
-        <div className="col-sm-6 text-sm-end">
-          <a href="category.html" className="read-more">
-            View All
-          </a>
-        </div>
-      </div>
+      <SectionHeader title = "3D Printers" />
       <div className="row g-3">
         <div className="col-md-9">
           <div className="row g-3">
@@ -201,94 +196,36 @@ function Home() {
     <div className="container">
       <div className="row">
         <div className="col-md-6 col-lg-3">
-          <div className="blog-entry">
-            <a href="single.html" className="img-link">
-              <img
-                src="/images/img_1_horizontal.jpg"
-                alt="Image"
-                className="img-fluid"
-              />
-            </a>
-            <span className="date">Apr. 14th, 2022</span>
-            <h2>
-              <a href="single.html">
-                Thought you loved Python? Wait until you meet Rust
-              </a>
-            </h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p>
-              <a href="#" className="read-more">
-                Continue Reading
-              </a>
-            </p>
-          </div>
+          <ArticleCard
+            image="/images/img_1_horizontal.jpg"
+            date="Apr. 14th, 2022"
+            title="Thought you loved Python? Wait until you meet Rust"
+            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+          />
         </div>
         <div className="col-md-6 col-lg-3">
-          <div className="blog-entry">
-            <a href="single.html" className="img-link">
-              <img
-                src="/images/img_2_horizontal.jpg"
-                alt="Image"
-                className="img-fluid"
-              />
-            </a>
-            <span className="date">Apr. 14th, 2022</span>
-            <h2>
-              <a href="single.html">
-                Startup vs corporate: What job suits you best?
-              </a>
-            </h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p>
-              <a href="#" className="read-more">
-                Continue Reading
-              </a>
-            </p>
-          </div>
+          <ArticleCard
+            image="/images/img_2_horizontal.jpg"
+            date="Apr. 14th, 2022"
+            title="Startup vs corporate: What job suits you best?"
+            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+          />
         </div>
         <div className="col-md-6 col-lg-3">
-          <div className="blog-entry">
-            <a href="single.html" className="img-link">
-              <img
-                src="/images/img_3_horizontal.jpg"
-                alt="Image"
-                className="img-fluid"
-              />
-            </a>
-            <span className="date">Apr. 14th, 2022</span>
-            <h2>
-              <a href="single.html">UK sees highest inflation in 30 years</a>
-            </h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p>
-              <a href="#" className="read-more">
-                Continue Reading
-              </a>
-            </p>
-          </div>
+          <ArticleCard
+            image="/images/img_3_horizontal.jpg"
+            date="Apr. 14th, 2022"
+            title="UK sees highest inflation in 30 years"
+            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+          />
         </div>
         <div className="col-md-6 col-lg-3">
-          <div className="blog-entry">
-            <a href="single.html" className="img-link">
-              <img
-                src="/images/img_4_horizontal.jpg"
-                alt="Image"
-                className="img-fluid"
-              />
-            </a>
-            <span className="date">Apr. 14th, 2022</span>
-            <h2>
-              <a href="single.html">
-                Don’t assume your user data in the cloud is safe
-              </a>
-            </h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p>
-              <a href="#" className="read-more">
-                Continue Reading
-              </a>
-            </p>
-          </div>
+          <ArticleCard
+            image="/images/img_4_horizontal.jpg"
+            date="Apr. 14th, 2022"
+            title="Don’t assume your user data in the cloud is safe"
+            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+          />
         </div>
       </div>
     </div>
@@ -297,16 +234,7 @@ function Home() {
   {/* Start posts-entry */}
   <section className="section posts-entry">
     <div className="container">
-      <div className="row mb-4">
-        <div className="col-sm-6">
-          <h2 className="posts-entry-title">Culture</h2>
-        </div>
-        <div className="col-sm-6 text-sm-end">
-          <a href="category.html" className="read-more">
-            View All
-          </a>
-        </div>
-      </div>
+      <SectionHeader title = "Filaments" />
       <div className="row g-3">
         <div className="col-md-9 order-md-2">
           <div className="row g-3">
@@ -426,16 +354,7 @@ function Home() {
   </section>
   <section className="section">
     <div className="container">
-      <div className="row mb-4">
-        <div className="col-sm-6">
-          <h2 className="posts-entry-title">Politics</h2>
-        </div>
-        <div className="col-sm-6 text-sm-end">
-          <a href="category.html" className="read-more">
-            View All
-          </a>
-        </div>
-      </div>
+      <SectionHeader title="Print Settings" />
       <div className="row">
         <div className="col-lg-4 mb-4">
           <div className="post-entry-alt">
@@ -820,16 +739,7 @@ function Home() {
   </section>
   <div className="section bg-light">
     <div className="container">
-      <div className="row mb-4">
-        <div className="col-sm-6">
-          <h2 className="posts-entry-title">Travel</h2>
-        </div>
-        <div className="col-sm-6 text-sm-end">
-          <a href="category.html" className="read-more">
-            View All
-          </a>
-        </div>
-      </div>
+     <SectionHeader title="Projects" />
       <div className="row align-items-stretch retro-layout-alt">
         <div className="col-md-5 order-md-2">
           <a href="single.html" className="hentry img-1 h-100 gradient">
