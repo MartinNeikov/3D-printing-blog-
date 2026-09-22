@@ -1,6 +1,6 @@
 import ArticleCard from "../components/ArticleCard.jsx";
 import SectionHeader from "../components/SectionHeader.jsx";
-import SmallArticleItem from "../components/SmallArticleItem.jsx";
+import SmallArticleItem from "../components/SmallArticleItems.jsx";
 import LargeArticleCard from "../components/LargeArticleCard.jsx";
 import AuthorArticleCard from "../components/AuthorArticleCard.jsx";
 import FeaturedProjectCard from "../components/FeaturedProjectCard.jsx";
