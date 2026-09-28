@@ -1,10 +1,10 @@
-import ArticleCard from "../components/ArticleCard.jsx";
-import SectionHeader from "../components/SectionHeader.jsx";
-import SmallArticleItem from "../components/SmallArticleItems.jsx";
-import LargeArticleCard from "../components/LargeArticleCard.jsx";
-import AuthorArticleCard from "../components/AuthorArticleCard.jsx";
-import FeaturedProjectCard from "../components/FeaturedProjectCard.jsx";
-import FeaturedArticleCard from "../components/FeaturedArticleCard.jsx";
+import ArticleCard from "../cards/article-card/ArticleCard.jsx";
+import SectionHeader from "../section-header/SectionHeader.jsx";
+import SmallArticleItem from "../cards/small-article-item/SmallArticleItems.jsx";
+import LargeArticleCard from "../cards/large-article-card/LargeArticleCard.jsx";
+import AuthorArticleCard from "../cards/author-article-card/AuthorArticleCard.jsx";
+import FeaturedProjectCard from "../cards/feautured-project-card/FeaturedProjectCard.jsx";
+import FeaturedArticleCard from "../cards/featured-article-card/FeaturedArticleCard.jsx";
 
 function Home() {
   const printSettingsArticles = [
