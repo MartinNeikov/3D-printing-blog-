@@ -1,3 +1,4 @@
+import { useParams } from "react-router";
 import Sidebar from "../sidebar/Sidebar";
 
 const articles = [
@@ -31,14 +32,14 @@ const articles = [
 ];
 
 function Category() {
+  const { categoryName } = useParams();
+
   return (
     <div className="section search-result-wrap">
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <div className="heading">
-              Category: 3D Printers
-            </div>
+            <div className="heading">Category: {categoryName}</div>
           </div>
         </div>
 
@@ -59,8 +60,7 @@ function Category() {
 
                 <div>
                   <span className="date">
-                    {article.date} &bull;{" "}
-                    <a href="#">{article.category}</a>
+                    {article.date} &bull; <a href="#">{article.category}</a>
                   </span>
 
                   <h2>
@@ -70,10 +70,7 @@ function Category() {
                   <p>{article.description}</p>
 
                   <p>
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-outline-primary"
-                    >
+                    <a href="#" className="btn btn-sm btn-outline-primary">
                       Read More
                     </a>
                   </p>

@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+
 function Header() {
   return (
     <>
@@ -17,9 +19,9 @@ function Header() {
             <div className="site-navigation">
               <div className="row g-0 align-items-center">
                 <div className="col-2">
-                  <a href="/" className="logo m-0 float-start">
+                  <NavLink to="/" className="logo m-0 float-start">
                     PrintForge<span className="text-primary">.</span>
-                  </a>
+                  </NavLink>
                 </div>
 
                 <div className="col-8 text-center">
@@ -37,39 +39,47 @@ function Header() {
                   </form>
 
                   <ul className="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-                    <li className="active">
-                      <a href="/">Home</a>
+                    <li>
+                      <NavLink to="/">Home</NavLink>
+                    </li>
+                    
+                    <li>
+                      <NavLink to="/articles">Articles</NavLink>
                     </li>
 
                     <li>
-                      <a href="#">3D Printers</a>
+                      <NavLink to="/categories/3d-printers">
+                        3D Printers
+                      </NavLink>
                     </li>
 
                     <li>
-                      <a href="#">Filaments</a>
+                      <NavLink to="/categories/filaments">Filaments</NavLink>
                     </li>
 
                     <li>
-                      <a href="#">Print Settings</a>
+                      <NavLink to="/categories/print-settings">
+                        Print Settings
+                      </NavLink>
                     </li>
 
                     <li>
-                      <a href="#">Projects</a>
+                      <NavLink to="/categories/projects">Projects</NavLink>
                     </li>
 
                     <li>
-                      <a href="#">Login</a>
+                      <NavLink to="#">Login</NavLink>
                     </li>
 
                     <li>
-                      <a href="#">Register</a>
+                      <NavLink to="#">Register</NavLink>
                     </li>
                   </ul>
                 </div>
 
                 <div className="col-2 text-end">
                   <a
-                    href="#"
+                    to="#"
                     className="burger ms-auto float-end site-menu-toggle js-menu-toggle d-inline-block d-lg-none light"
                   >
                     <span />

@@ -1,7 +1,8 @@
+import { useParams } from "react-router";
 import Sidebar from "../sidebar/Sidebar";
 
-
 function ArticleDetails() {
+  const { articleId } = useParams();
 
   return (
     <>
@@ -15,9 +16,8 @@ function ArticleDetails() {
           <div className="row same-height justify-content-center">
             <div className="col-md-6">
               <div className="post-entry text-center">
-                <h1 className="mb-4">
-                  How to Choose Your First 3D Printer
-                </h1>
+                <h1 className="mb-4">How to Choose Your First 3D Printer</h1>
+                <p className="text-white">Article ID: {articleId}</p>
 
                 <div className="post-meta align-items-center text-center">
                   <figure className="author-figure mb-0 me-3 d-inline-block">
@@ -28,13 +28,9 @@ function ArticleDetails() {
                     />
                   </figure>
 
-                  <span className="d-inline-block mt-1">
-                    By Martin
-                  </span>
+                  <span className="d-inline-block mt-1">By Martin</span>
 
-                  <span>
-                    &nbsp;-&nbsp; September 28, 2026
-                  </span>
+                  <span>&nbsp;-&nbsp; September 28, 2026</span>
                 </div>
               </div>
             </div>
@@ -45,12 +41,11 @@ function ArticleDetails() {
       <section className="section">
         <div className="container">
           <div className="row blog-entries">
-
             <div className="col-md-12 col-lg-8 main-content">
               <div className="post-content-body">
                 <p>
-                  Choosing your first 3D printer can be confusing because
-                  there are many different models, features and price ranges.
+                  Choosing your first 3D printer can be confusing because there
+                  are many different models, features and price ranges.
                 </p>
 
                 <p>
@@ -77,7 +72,6 @@ function ArticleDetails() {
             </div>
 
             <Sidebar />
-
           </div>
         </div>
       </section>
