@@ -40,50 +40,76 @@ function Header() {
 
                   <ul className="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
                     <li>
-                      <NavLink to="/"
-                      className={({ isActive }) => (isActive ? "active" : "")}
-                      >Home</NavLink>
-                    </li>
-                    
-                    <li>
-                      <NavLink to="/articles"
-                      end
-                       className={({ isActive }) => (isActive ? "active" : "")}
-                      >Articles</NavLink>
+                      <NavLink
+                        to="/"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Home
+                      </NavLink>
                     </li>
 
                     <li>
-                      <NavLink to="/categories/3d-printers"
-                       className={({ isActive }) => (isActive ? "active" : "")}>
+                      <NavLink
+                        to="/articles"
+                        end
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Articles
+                      </NavLink>
+                    </li>
+
+                    <li>
+                      <NavLink
+                        to="/categories/3d-printers"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
                         3D Printers
                       </NavLink>
                     </li>
 
                     <li>
-                      <NavLink to="/categories/filaments"
-                       className={({ isActive }) => (isActive ? "active" : "")}>
-                        Filaments</NavLink>
+                      <NavLink
+                        to="/categories/filaments"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Filaments
+                      </NavLink>
                     </li>
 
                     <li>
-                      <NavLink to="/categories/print-settings"
-                       className={({ isActive }) => (isActive ? "active" : "")}>
+                      <NavLink
+                        to="/categories/print-settings"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
                         Print Settings
                       </NavLink>
                     </li>
 
                     <li>
-                      <NavLink to="/categories/projects"
-                       className={({ isActive }) => (isActive ? "active" : "")}>
-                        Projects</NavLink>
+                      <NavLink
+                        to="/categories/projects"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Projects
+                      </NavLink>
                     </li>
 
                     <li>
-                      <NavLink to="#">Login</NavLink>
+                      <NavLink
+                        to="/login"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Login
+                      </NavLink>
                     </li>
 
                     <li>
-                      <NavLink to="#">Register</NavLink>
+                      <NavLink
+                        to="/register"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Register
+                      </NavLink>
                     </li>
                   </ul>
                 </div>
