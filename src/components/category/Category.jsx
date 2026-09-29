@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import Sidebar from "../sidebar/Sidebar";
 
 const articles = [
@@ -50,29 +50,39 @@ function Category() {
                 className="blog-entry d-flex blog-entry-search-item"
                 key={article.id}
               >
-                <a href="#" className="img-link me-4">
+                <Link to={`/articles/${article.id}`} className="img-link me-4">
                   <img
                     src={article.image}
                     alt={article.title}
                     className="img-fluid"
                   />
-                </a>
+                </Link>
 
                 <div>
                   <span className="date">
-                    {article.date} &bull; <a href="#">{article.category}</a>
+                    {article.date} &bull;{" "}
+                    <Link
+                      to={`/categories/${article.category
+                        .toLowerCase()
+                        .replaceAll(" ", "-")}`}
+                    >
+                      {article.category}
+                    </Link>
                   </span>
 
                   <h2>
-                    <a href="#">{article.title}</a>
+                    <Link to={`/articles/${article.id}`}>{article.title}</Link>
                   </h2>
 
                   <p>{article.description}</p>
 
                   <p>
-                    <a href="#" className="btn btn-sm btn-outline-primary">
+                    <Link
+                      to={`/articles/${article.id}`}
+                      className="btn btn-sm btn-outline-primary"
+                    >
                       Read More
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </div>
