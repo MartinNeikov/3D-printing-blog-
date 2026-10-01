@@ -1,37 +1,70 @@
 import { Link } from "react-router";
 import Sidebar from "../sidebar/Sidebar";
-
-const articles = [
-  {
-    id: 1,
-    image: "/images/img_1_sq.jpg",
-    date: "Sep. 28th, 2026",
-    category: "3D Printers",
-    title: "How to Choose Your First 3D Printer",
-    description:
-      "A practical guide to choosing a reliable 3D printer based on your experience, budget and projects.",
-  },
-  {
-    id: 2,
-    image: "/images/img_2_sq.jpg",
-    date: "Sep. 27th, 2026",
-    category: "Filaments",
-    title: "PLA vs PETG: Which Filament Should You Choose?",
-    description:
-      "Learn the main differences between PLA and PETG and when each material is the better choice.",
-  },
-  {
-    id: 3,
-    image: "/images/img_3_sq.jpg",
-    date: "Sep. 26th, 2026",
-    category: "Print Settings",
-    title: "How to Improve First Layer Adhesion",
-    description:
-      "Simple settings and preparation techniques that can help you achieve a reliable first layer.",
-  },
-];
+import { supabase } from "../../lib/supabaseClient.js";
+import { useEffect, useState } from "react";
 
 function Catalog() {
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadArticles() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const { data, error } = await supabase
+          .from("articles")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .abortSignal(controller.signal);
+
+        if (error) {
+          throw error;
+        }
+
+        setArticles(data);
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        console.error("Failed to load articles:", error);
+        setError(error.message);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadArticles();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="container py-5 text-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container py-5 text-center">
+        <h2>Unable to load articles</h2>
+        <p>Please try again later.</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="hero overlay inner-page bg-primary py-5">
@@ -58,7 +91,7 @@ function Catalog() {
                     className="img-link me-4"
                   >
                     <img
-                      src={article.image}
+                      src={article.image_url}
                       alt={article.title}
                       className="img-fluid"
                     />
@@ -66,7 +99,7 @@ function Catalog() {
 
                   <div>
                     <span className="date">
-                      {article.date} &bull;{" "}
+                      {new Date(article.created_at).toLocaleDateString()} &bull;{" "}
                       <Link
                         to={`/categories/${article.category
                           .toLowerCase()
@@ -82,7 +115,7 @@ function Catalog() {
                       </Link>
                     </h2>
 
-                    <p>{article.description}</p>
+                    <p>{article.short_description}</p>
 
                     <p>
                       <Link
