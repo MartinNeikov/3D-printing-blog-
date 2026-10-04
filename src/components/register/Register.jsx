@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 
 function Register() {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({
+  const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
@@ -13,7 +13,7 @@ function Register() {
   const [error, setError] = useState("");
 
   function changeHandler(e) {
-    setFormValues((state) => ({
+    setData((state) => ({
       ...state,
       [e.target.name]: e.target.value,
     }));
@@ -22,7 +22,7 @@ function Register() {
   function submitHandler(e) {
     e.preventDefault();
 
-    if (formValues.password !== formValues.confirmPassword) {
+    if (data.password !== data.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
@@ -53,7 +53,7 @@ function Register() {
                     name="name"
                     className="form-control"
                     placeholder="Enter your name"
-                    value={formValues.name}
+                    value={data.name}
                     onChange={changeHandler}
                     required
                   />
@@ -70,7 +70,7 @@ function Register() {
                     name="email"
                     className="form-control"
                     placeholder="Enter your email"
-                    value={formValues.email}
+                    value={data.email}
                     onChange={changeHandler}
                     required
                   />
@@ -87,7 +87,7 @@ function Register() {
                     name="password"
                     className="form-control"
                     placeholder="Enter your password"
-                    value={formValues.password}
+                    value={data.password}
                     onChange={changeHandler}
                     minLength="6"
                     required
@@ -105,7 +105,7 @@ function Register() {
                     name="confirmPassword"
                     className="form-control"
                     placeholder="Confirm your password"
-                    value={formValues.confirmPassword}
+                    value={data.confirmPassword}
                     onChange={changeHandler}
                     minLength="6"
                     required

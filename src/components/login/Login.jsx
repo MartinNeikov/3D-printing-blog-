@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate} from "react-router";
 
-const navigate = useNavigate();
+
 
 function Login() {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({
+  const [data, setData] = useState({
     email: "",
     password: "",
   });
 
   function changeHandler(e) {
-    setFormValues((state) => ({
+    setData((state) => ({
       ...state,
       [e.target.name]: e.target.value,
     }));
@@ -44,7 +44,7 @@ function Login() {
                     name="email"
                     className="form-control"
                     placeholder="Enter your email"
-                    value={formValues.email}
+                    value={data.email}
                     onChange={changeHandler}
                     required
                   />
@@ -61,7 +61,7 @@ function Login() {
                     name="password"
                     className="form-control"
                     placeholder="Enter your password"
-                    value={formValues.password}
+                    value={data.password}
                     onChange={changeHandler}
                     required
                   />
