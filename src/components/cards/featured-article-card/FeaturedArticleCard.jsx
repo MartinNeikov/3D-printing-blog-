@@ -1,6 +1,17 @@
-function FeaturedArticleCard({ image, date, title, className }) {
+import { Link } from "react-router";
+
+function FeaturedArticleCard({
+  id,
+  image,
+  date,
+  title,
+  className,
+}) {
   return (
-    <a href="single.html" className={className}>
+    <Link
+      to={`/articles/${id}`}
+      className={className}
+    >
       <div
         className="featured-img"
         style={{ backgroundImage: `url("${image}")` }}
@@ -10,7 +21,7 @@ function FeaturedArticleCard({ image, date, title, className }) {
         <span className="date">{date}</span>
         <h2>{title}</h2>
       </div>
-    </a>
+    </Link>
   );
 }
 

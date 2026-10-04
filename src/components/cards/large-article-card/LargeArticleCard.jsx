@@ -1,32 +1,45 @@
-function LargeArticleCard({ image, date, title, description }) {
-    return (
-        <div className="blog-entry">
-            <a href="single.html" className="img-link">
-                <img
-                    src={image}
-                    alt={title}
-                    className="img-fluid"
-                />
-            </a>
+import { Link } from "react-router";
 
-            <span className="date">{date}</span>
+function LargeArticleCard({
+  id,
+  image,
+  date,
+  title,
+  description,
+}) {
+  return (
+    <div className="blog-entry">
+      <Link
+        to={`/articles/${id}`}
+        className="img-link"
+      >
+        <img
+          src={image}
+          alt={title}
+          className="img-fluid"
+        />
+      </Link>
 
-            <h2>
-                <a href="single.html">{title}</a>
-            </h2>
+      <span className="date">{date}</span>
 
-            <p>{description}</p>
+      <h2>
+        <Link to={`/articles/${id}`}>
+          {title}
+        </Link>
+      </h2>
 
-            <p>
-                <a
-                    href="single.html"
-                    className="btn btn-sm btn-outline-primary"
-                >
-                    Read More
-                </a>
-            </p>
-        </div>
-    );
+      <p>{description}</p>
+
+      <p>
+        <Link
+          to={`/articles/${id}`}
+          className="btn btn-sm btn-outline-primary"
+        >
+          Read More
+        </Link>
+      </p>
+    </div>
+  );
 }
 
 export default LargeArticleCard;

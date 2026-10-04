@@ -1,62 +1,74 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router";
+
+import { supabase } from "../../lib/supabaseClient.js";
+
 function Sidebar() {
+  const [recentArticles, setRecentArticles] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadRecentArticles() {
+      try {
+        const { data, error } = await supabase
+          .from("articles")
+          .select("id, title, image_url, created_at")
+          .order("created_at", { ascending: false })
+          .limit(3)
+          .abortSignal(controller.signal);
+
+        if (error) {
+          throw error;
+        }
+
+        setRecentArticles(data ?? []);
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        console.error("Failed to load recent articles:", error);
+      }
+    }
+
+    loadRecentArticles();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
   return (
     <div className="col-md-12 col-lg-4 sidebar">
-      <div className="sidebar-box search-form-wrap mb-4">
-        <form className="sidebar-search-form">
-          <span className="bi-search"></span>
-
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search articles..."
-          />
-        </form>
-      </div>
-
       <div className="sidebar-box">
-        <h3 className="heading">Popular Posts</h3>
+        <h3 className="heading">Recent Articles</h3>
 
         <div className="post-entry-sidebar">
           <ul>
-            <li>
-              <a href="#">
-                <img
-                  src="/images/img_1_sq.jpg"
-                  alt="Popular article"
-                  className="me-4 rounded"
-                />
+            {recentArticles.map((article) => (
+              <li key={article.id}>
+                <Link to={`/articles/${article.id}`}>
+                  <img
+                    src={article.image_url}
+                    alt={article.title}
+                    className="me-4 rounded"
+                  />
 
-                <div className="text">
-                  <h4>How to Choose Your First 3D Printer</h4>
+                  <div className="text">
+                    <h4>{article.title}</h4>
 
-                  <div className="post-meta">
-                    <span className="mr-2">
-                      September 28, 2026
-                    </span>
+                    <div className="post-meta">
+                      <span className="mr-2">
+                        {new Date(
+                          article.created_at
+                        ).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </a>
-            </li>
-
-            <li>
-              <a href="#">
-                <img
-                  src="/images/img_2_sq.jpg"
-                  alt="Popular article"
-                  className="me-4 rounded"
-                />
-
-                <div className="text">
-                  <h4>PLA vs PETG: Which Should You Choose?</h4>
-
-                  <div className="post-meta">
-                    <span className="mr-2">
-                      September 27, 2026
-                    </span>
-                  </div>
-                </div>
-              </a>
-            </li>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -65,24 +77,39 @@ function Sidebar() {
         <h3 className="heading">Categories</h3>
 
         <ul className="categories">
-          <li><a href="#">3D Printers</a></li>
-          <li><a href="#">Filaments</a></li>
-          <li><a href="#">Print Settings</a></li>
-          <li><a href="#">Projects</a></li>
+          <li>
+            <Link to="/categories/3d-printers">
+              3D Printers
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/categories/filaments">
+              Filaments
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/categories/print-settings">
+              Print Settings
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/categories/projects">
+              Projects
+            </Link>
+          </li>
         </ul>
       </div>
 
       <div className="sidebar-box">
-        <h3 className="heading">Tags</h3>
-
-        <ul className="tags">
-          <li><a href="#">FDM</a></li>
-          <li><a href="#">PLA</a></li>
-          <li><a href="#">PETG</a></li>
-          <li><a href="#">Bambu Lab</a></li>
-          <li><a href="#">Settings</a></li>
-          <li><a href="#">Projects</a></li>
-        </ul>
+        <Link
+          to="/articles"
+          className="btn btn-outline-primary w-100"
+        >
+          View All Articles
+        </Link>
       </div>
     </div>
   );

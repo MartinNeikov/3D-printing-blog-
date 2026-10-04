@@ -1,21 +1,33 @@
-function SmallArticleItem({ date, title, description }) {
-    return (
-        <li>
-            <span className="date">{date}</span>
+import { Link } from "react-router";
 
-            <h3>
-                <a href="single.html">{title}</a>
-            </h3>
+function SmallArticleItem({
+  id,
+  date,
+  title,
+  description,
+}) {
+  return (
+    <li>
+      <span className="date">{date}</span>
 
-            <p>{description}</p>
+      <h3>
+        <Link to={`/articles/${id}`}>
+          {title}
+        </Link>
+      </h3>
 
-            <p>
-                <a href="single.html" className="read-more">
-                    Continue Reading
-                </a>
-            </p>
-        </li>
-    );
+      <p>{description}</p>
+
+      <p>
+        <Link
+          to={`/articles/${id}`}
+          className="read-more"
+        >
+          Continue Reading
+        </Link>
+      </p>
+    </li>
+  );
 }
 
 export default SmallArticleItem;
