@@ -1,6 +1,23 @@
-import { NavLink } from "react-router";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router";
 
 function Header() {
+  const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
+
+  function searchSubmitHandler(e) {
+    e.preventDefault();
+
+    const value = searchValue.trim();
+
+    if (!value) {
+      return;
+    }
+
+    navigate(`/search?q=${encodeURIComponent(value)}`);
+    setSearchValue("");
+  }
+
   return (
     <>
       <div className="site-mobile-menu site-navbar-target">
@@ -26,13 +43,15 @@ function Header() {
 
                 <div className="col-8 text-center">
                   <form
-                    action="#"
+                    onSubmit={searchSubmitHandler}
                     className="search-form d-inline-block d-lg-none"
                   >
                     <input
-                      type="text"
+                      type="search"
                       className="form-control"
                       placeholder="Search..."
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
                     />
 
                     <span className="bi-search" />
@@ -42,7 +61,10 @@ function Header() {
                     <li>
                       <NavLink
                         to="/"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        end
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Home
                       </NavLink>
@@ -52,7 +74,9 @@ function Header() {
                       <NavLink
                         to="/articles"
                         end
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Articles
                       </NavLink>
@@ -61,7 +85,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/articles/create"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Create Article
                       </NavLink>
@@ -70,7 +96,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/categories/3d-printers"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         3D Printers
                       </NavLink>
@@ -79,7 +107,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/categories/filaments"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Filaments
                       </NavLink>
@@ -88,7 +118,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/categories/print-settings"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Print Settings
                       </NavLink>
@@ -97,7 +129,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/categories/projects"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Projects
                       </NavLink>
@@ -106,7 +140,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/login"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Login
                       </NavLink>
@@ -115,7 +151,9 @@ function Header() {
                     <li>
                       <NavLink
                         to="/register"
-                        className={({ isActive }) => (isActive ? "active" : "")}
+                        className={({ isActive }) =>
+                          isActive ? "active" : ""
+                        }
                       >
                         Register
                       </NavLink>
@@ -124,21 +162,24 @@ function Header() {
                 </div>
 
                 <div className="col-2 text-end">
-                  <a
-                    to="#"
+                  <button
+                    type="button"
                     className="burger ms-auto float-end site-menu-toggle js-menu-toggle d-inline-block d-lg-none light"
+                    aria-label="Open menu"
                   >
                     <span />
-                  </a>
+                  </button>
 
                   <form
-                    action="#"
+                    onSubmit={searchSubmitHandler}
                     className="search-form d-none d-lg-inline-block"
                   >
                     <input
-                      type="text"
+                      type="search"
                       className="form-control"
                       placeholder="Search..."
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
                     />
 
                     <span className="bi-search" />
