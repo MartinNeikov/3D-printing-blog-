@@ -60,6 +60,15 @@ function Header() {
 
                     <li>
                       <NavLink
+                        to="/articles/create"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                      >
+                        Create Article
+                      </NavLink>
+                    </li>
+
+                    <li>
+                      <NavLink
                         to="/categories/3d-printers"
                         className={({ isActive }) => (isActive ? "active" : "")}
                       >

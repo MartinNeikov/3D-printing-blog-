@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
+import { validateRegister } from "../../utils/validation.js";
+
 function Register() {
   const navigate = useNavigate();
+
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -10,27 +13,32 @@ function Register() {
     confirmPassword: "",
   });
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   function changeHandler(e) {
     setData((state) => ({
       ...state,
       [e.target.name]: e.target.value,
     }));
+
+    setErrors((state) => ({
+      ...state,
+      [e.target.name]: "",
+    }));
   }
 
   function submitHandler(e) {
     e.preventDefault();
 
-    if (data.password !== data.confirmPassword) {
-      setError("Passwords do not match.");
+    const validationErrors = validateRegister(data);
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
       return;
     }
 
-    setError("");
-
-     navigate("/");
-   
+    navigate("/");
   }
 
   return (
@@ -39,11 +47,16 @@ function Register() {
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-5">
             <div className="p-5 bg-light rounded">
-              <h2 className="mb-4 text-center">Register</h2>
+              <h2 className="mb-4 text-center">
+                Register
+              </h2>
 
-              <form onSubmit={submitHandler}>
+              <form onSubmit={submitHandler} noValidate>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
+                  <label
+                    htmlFor="name"
+                    className="form-label"
+                  >
                     Name
                   </label>
 
@@ -55,12 +68,20 @@ function Register() {
                     placeholder="Enter your name"
                     value={data.name}
                     onChange={changeHandler}
-                    required
                   />
+
+                  {errors.name && (
+                    <p className="text-danger mt-1 mb-0">
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
+                  <label
+                    htmlFor="email"
+                    className="form-label"
+                  >
                     Email
                   </label>
 
@@ -72,12 +93,20 @@ function Register() {
                     placeholder="Enter your email"
                     value={data.email}
                     onChange={changeHandler}
-                    required
                   />
+
+                  {errors.email && (
+                    <p className="text-danger mt-1 mb-0">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
+                  <label
+                    htmlFor="password"
+                    className="form-label"
+                  >
                     Password
                   </label>
 
@@ -89,13 +118,20 @@ function Register() {
                     placeholder="Enter your password"
                     value={data.password}
                     onChange={changeHandler}
-                    minLength="6"
-                    required
                   />
+
+                  {errors.password && (
+                    <p className="text-danger mt-1 mb-0">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="confirmPassword" className="form-label">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="form-label"
+                  >
                     Confirm Password
                   </label>
 
@@ -107,16 +143,14 @@ function Register() {
                     placeholder="Confirm your password"
                     value={data.confirmPassword}
                     onChange={changeHandler}
-                    minLength="6"
-                    required
                   />
-                </div>
 
-                {error && (
-                  <p className="text-danger text-center">
-                    {error}
-                  </p>
-                )}
+                  {errors.confirmPassword && (
+                    <p className="text-danger mt-1 mb-0">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
 
                 <button
                   type="submit"
@@ -128,7 +162,9 @@ function Register() {
 
               <p className="text-center mt-4 mb-0">
                 Already have an account?{" "}
-                <Link to="/login">Login</Link>
+                <Link to="/login">
+                  Login
+                </Link>
               </p>
             </div>
           </div>
