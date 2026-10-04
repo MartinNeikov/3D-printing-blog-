@@ -1,41 +1,84 @@
+import { useState } from "react";
+import { Link, useNavigate} from "react-router";
+
+const navigate = useNavigate();
+
 function Login() {
+  const navigate = useNavigate();
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  function changeHandler(e) {
+    setFormValues((state) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  }
+
+  function submitHandler(e) {
+
+    e.preventDefault();
+
+    navigate("/");
+  }
+
   return (
     <section className="section">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-5">
-            <div className="p-5 bg-light">
+            <div className="p-5 bg-light rounded">
               <h2 className="mb-4 text-center">Login</h2>
 
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
+              <form onSubmit={submitHandler}>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
 
-                <input
-                  type="email"
-                  id="email"
-                  className="form-control"
-                  placeholder="Enter your email"
-                />
-              </div>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="Enter your email"
+                    value={formValues.email}
+                    onChange={changeHandler}
+                    required
+                  />
+                </div>
 
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
+                <div className="mb-4">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
 
-                <input
-                  type="password"
-                  id="password"
-                  className="form-control"
-                  placeholder="Enter your password"
-                />
-              </div>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    className="form-control"
+                    placeholder="Enter your password"
+                    value={formValues.password}
+                    onChange={changeHandler}
+                    required
+                  />
+                </div>
 
-              <button className="btn btn-primary w-100">
-                Login
-              </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                >
+                  Login
+                </button>
+              </form>
+
+              <p className="text-center mt-4 mb-0">
+                Don&apos;t have an account?{" "}
+                <Link to="/register">Register</Link>
+              </p>
             </div>
           </div>
         </div>
