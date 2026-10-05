@@ -161,7 +161,7 @@ function Home() {
 
             return (
               <section
-                className="section posts-entry"
+                className="section"
                 key={category.title}
               >
                 <div className="content-container">
