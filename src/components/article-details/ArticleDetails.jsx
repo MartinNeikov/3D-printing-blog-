@@ -54,89 +54,87 @@ function ArticleDetails() {
 
   if (isLoading) {
     return (
-      <div className="container py-5 text-center">
-        <p>Loading...</p>
-      </div>
+      <section className="page-status">
+        <div className="content-container">
+          <p>Loading...</p>
+        </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="container py-5 text-center">
-        <h2>Unable to load article</h2>
-        <p>Please try again later.</p>
-      </div>
+      <section className="page-status">
+        <div className="content-container">
+          <h2>Unable to load article</h2>
+          <p>Please try again later.</p>
+        </div>
+      </section>
     );
   }
 
   if (!article) {
     return (
-      <div className="container py-5 text-center">
-        <h2>Article not found</h2>
-        <p>The article you are looking for does not exist.</p>
-      </div>
+      <section className="page-status">
+        <div className="content-container">
+          <h2>Article not found</h2>
+          <p>The article you are looking for does not exist.</p>
+        </div>
+      </section>
     );
   }
 
   return (
     <>
-      <div
-        className="site-cover site-cover-sm same-height overlay single-page"
+      <section
+        className="article-hero"
         style={{
-          backgroundImage: "url('/images/hero/3d-printing-hero.png')",
+          backgroundImage:
+            "url('/images/hero/3d-printing-hero.png')",
         }}
       >
-        <div className="container">
-          <div className="row same-height justify-content-center">
-            <div className="col-md-6">
-              <div className="post-entry text-center">
-                <h1 className="mb-4">{article.title}</h1>
+        <div className="content-container">
+          <div className="article-hero-content">
+            <h1 className="article-hero-title">
+              {article.title}
+            </h1>
 
-                <div className="post-meta align-items-center text-center">
-                  <figure className="author-figure mb-0 me-3 d-inline-block">
-                    <img
-                      src="/images/authors/Martin.png"
-                      alt="Author"
-                      className="img-fluid"
-                    />
-                  </figure>
+            <div className="post-meta">
+              <figure className="author-figure">
+                <img
+                  src="/images/authors/Martin.png"
+                  alt="Author"
+                />
+              </figure>
 
-                  <span className="d-inline-block mt-1">
-                    By Martin
-                  </span>
+              <span>By Martin</span>
 
-                  <span>
-                    &nbsp;-&nbsp;
-                    {new Date(article.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
+              <span>
+                {" • "}
+                {new Date(
+                  article.created_at,
+                ).toLocaleDateString()}
+              </span>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <section className="section">
-        <div className="container">
-          <div className="row blog-entries">
-            <div className="col-md-12 col-lg-8 main-content">
-              <div className="post-content-body">
-                <p>{article.content}</p>
+        <div className="content-container article-details-layout">
+          <article className="article-main-content">
+            <div className="post-content-body">
+              <p>{article.content}</p>
 
-                <div className="row my-4">
-                  <div className="col-md-12 mb-4">
-                    <img
-                      src={article.image_url}
-                      alt={article.title}
-                      className="img-fluid rounded"
-                    />
-                  </div>
-                </div>
-              </div>
+              <img
+                src={article.image_url}
+                alt={article.title}
+                className="article-content-image"
+              />
             </div>
+          </article>
 
-            <Sidebar />
-          </div>
+          <Sidebar />
         </div>
       </section>
     </>

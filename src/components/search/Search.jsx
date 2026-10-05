@@ -14,8 +14,6 @@ function Search() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  
-
   useEffect(() => {
     const controller = new AbortController();
 
@@ -24,6 +22,7 @@ function Search() {
         setArticles([]);
         setIsLoading(false);
         setError("");
+
         return;
       }
 
@@ -53,6 +52,7 @@ function Search() {
         }
 
         console.error("Failed to search articles:", error);
+
         setError("Unable to search articles. Please try again later.");
       } finally {
         if (!controller.signal.aborted) {
@@ -82,104 +82,95 @@ function Search() {
   }
 
   return (
-    <div className="section search-result-wrap">
-      <div className="container">
-        <div className="row mb-5">
-          <div className="col-lg-8">
-            <h1 className="mb-4">Search Articles</h1>
+    <>
+      <section className="page-hero">
+        <div className="content-container">
+          <h1 className="page-hero-title">Search</h1>
+        </div>
+      </section>
 
-            <form onSubmit={submitHandler} className="d-flex gap-2">
+      <section className="section">
+        <div className="content-container">
+          <div className="search-page-header">
+            <h2 className="search-page-title">Search Articles</h2>
+
+            <form onSubmit={submitHandler} className="search-page-form">
               <input
                 type="search"
-                className="form-control"
-                placeholder="Search articles..."
+                className="search-page-input"
+                placeholder="Search by title, category..."
                 value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
+                onChange={(e) => setSearchValue(e.target.value)}
               />
 
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="form-submit">
                 Search
               </button>
             </form>
           </div>
-        </div>
 
-        <div className="row posts-entry">
-          <div className="col-lg-8">
-            {!query && <p>Enter a word or phrase to search the articles.</p>}
+          <div className="article-page-layout">
+            <div className="article-results">
+              {query && (
+                <div className="search-results-title">
+                  <h2>Results for &quot;{query}&quot;</h2>
+                </div>
+              )}
 
-            {query && (
-              <div className="mb-4">
-                <h2>Search results for: "{query}"</h2>
-              </div>
-            )}
+              {isLoading && <p>Searching...</p>}
 
-            {isLoading && <p>Searching articles...</p>}
+              {error && <p>{error}</p>}
 
-            {error && (
-              <div>
-                <h2>Search failed</h2>
-                <p>{error}</p>
-              </div>
-            )}
+              {!isLoading && !error && query && articles.length === 0 && (
+                <p>No articles found.</p>
+              )}
 
-            {!isLoading && !error && query && articles.length === 0 && (
-              <div>
-                <h2>No articles found</h2>
-                <p>No results were found for "{query}".</p>
-              </div>
-            )}
+              {!isLoading &&
+                !error &&
+                articles.map((article) => (
+                  <article className="article-list-item" key={article.id}>
+                    <Link
+                      to={`/articles/${article.id}`}
+                      className="article-list-image-link"
+                    >
+                      <img
+                        src={article.image_url}
+                        alt={article.title}
+                        className="article-list-image"
+                      />
+                    </Link>
 
-            {!isLoading &&
-              !error &&
-              articles.map((article) => (
-                <div
-                  className="blog-entry d-flex blog-entry-search-item"
-                  key={article.id}
-                >
-                  <Link
-                    to={`/articles/${article.id}`}
-                    className="img-link me-4"
-                  >
-                    <img
-                      src={article.image_url}
-                      alt={article.title}
-                      className="img-fluid"
-                    />
-                  </Link>
+                    <div className="article-list-content">
+                      <span className="date">
+                        {new Date(article.created_at).toLocaleDateString()}
+                        {" • "}
+                        {article.category}
+                      </span>
 
-                  <div>
-                    <span className="date">
-                      {new Date(article.created_at).toLocaleDateString()}
-                      {" • "}
-                      {article.category}
-                    </span>
+                      <h2>
+                        <Link to={`/articles/${article.id}`}>
+                          {article.title}
+                        </Link>
+                      </h2>
 
-                    <h2>
-                      <Link to={`/articles/${article.id}`}>
-                        {article.title}
-                      </Link>
-                    </h2>
+                      <p>{article.short_description}</p>
 
-                    <p>{article.short_description}</p>
-
-                    <p>
                       <Link
                         to={`/articles/${article.id}`}
-                        className="btn btn-sm btn-outline-primary"
+                        className="read-more"
                       >
                         Read More
                       </Link>
-                    </p>
-                  </div>
-                </div>
-              ))}
-          </div>
+                    </div>
+                  </article>
+                ))}
+            </div>
 
-          <Sidebar />
+            <Sidebar />
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
 

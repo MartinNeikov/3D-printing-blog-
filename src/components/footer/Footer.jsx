@@ -3,11 +3,11 @@ import { Link } from "react-router";
 function Footer() {
   return (
     <footer className="site-footer">
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-4">
+      <div className="footer-container">
+        <div className="footer-columns">
+          <div className="footer-column">
             <div className="widget">
-              <h3 className="mb-4">About PrintForge</h3>
+              <h3>About PrintForge</h3>
 
               <p>
                 A community-driven 3D printing blog for sharing
@@ -17,11 +17,11 @@ function Footer() {
             </div>
           </div>
 
-          <div className="col-lg-4 ps-lg-5">
+          <div className="footer-column">
             <div className="widget">
-              <h3 className="mb-4">Explore</h3>
+              <h3>Explore</h3>
 
-              <ul className="list-unstyled links">
+              <ul className="links">
                 <li>
                   <Link to="/">Home</Link>
                 </li>
@@ -45,11 +45,11 @@ function Footer() {
             </div>
           </div>
 
-          <div className="col-lg-4">
+          <div className="footer-column">
             <div className="widget">
-              <h3 className="mb-4">Topics</h3>
+              <h3>Topics</h3>
 
-              <ul className="list-unstyled links">
+              <ul className="links">
                 <li>
                   <Link to="/categories/print-settings">
                     Print Settings
@@ -72,30 +72,28 @@ function Footer() {
           </div>
         </div>
 
-        <div className="row mt-5">
-          <div className="col-12 text-center">
-            <p>
-              © 2026 PrintForge. All Rights Reserved.
-              {" — "}
-              Designed with love by{" "}
-              <a
-                href="https://untree.co"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Untree.co
-              </a>
-              {" — "}
-              Distributed by{" "}
-              <a
-                href="https://themewagon.com"
-                target="_blank"
-                rel="noreferrer"
-              >
-                ThemeWagon
-              </a>
-            </p>
-          </div>
+        <div className="footer-bottom">
+          <p>
+            © 2026 PrintForge. All Rights Reserved.
+            {" — "}
+            Designed with love by{" "}
+            <a
+              href="https://untree.co"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Untree.co
+            </a>
+            {" — "}
+            Distributed by{" "}
+            <a
+              href="https://themewagon.com"
+              target="_blank"
+              rel="noreferrer"
+            >
+              ThemeWagon
+            </a>
+          </p>
         </div>
       </div>
     </footer>

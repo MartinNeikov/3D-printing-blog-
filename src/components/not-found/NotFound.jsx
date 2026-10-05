@@ -2,8 +2,8 @@ import { Link } from "react-router";
 
 function NotFound() {
   return (
-    <section className="section">
-      <div className="container text-center">
+    <section className="page-status">
+      <div className="content-container">
         <h1>404</h1>
 
         <h2>Page Not Found</h2>
@@ -12,7 +12,7 @@ function NotFound() {
           The page you are looking for does not exist.
         </p>
 
-        <Link to="/" className="btn btn-primary">
+        <Link to="/" className="read-more">
           Back to Home
         </Link>
       </div>

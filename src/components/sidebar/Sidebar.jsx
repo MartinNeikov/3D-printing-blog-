@@ -28,7 +28,10 @@ function Sidebar() {
           return;
         }
 
-        console.error("Failed to load recent articles:", error);
+        console.error(
+          "Failed to load recent articles:",
+          error,
+        );
       }
     }
 
@@ -40,43 +43,49 @@ function Sidebar() {
   }, []);
 
   return (
-    <div className="col-md-12 col-lg-4 sidebar">
+    <aside className="sidebar">
       <div className="sidebar-box">
-        <h3 className="heading">Recent Articles</h3>
+        <h3 className="sidebar-heading">
+          Recent Articles
+        </h3>
 
-        <div className="post-entry-sidebar">
-          <ul>
-            {recentArticles.map((article) => (
-              <li key={article.id}>
-                <Link to={`/articles/${article.id}`}>
-                  <img
-                    src={article.image_url}
-                    alt={article.title}
-                    className="me-4 rounded"
-                  />
+        <ul className="recent-articles">
+          {recentArticles.map((article) => (
+            <li
+              className="recent-article"
+              key={article.id}
+            >
+              <Link
+                to={`/articles/${article.id}`}
+                className="recent-article-link"
+              >
+                <img
+                  src={article.image_url}
+                  alt={article.title}
+                  className="recent-article-image"
+                />
 
-                  <div className="text">
-                    <h4>{article.title}</h4>
+                <div className="recent-article-content">
+                  <h4>{article.title}</h4>
 
-                    <div className="post-meta">
-                      <span className="mr-2">
-                        {new Date(
-                          article.created_at
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <span className="recent-article-date">
+                    {new Date(
+                      article.created_at,
+                    ).toLocaleDateString()}
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="sidebar-box">
-        <h3 className="heading">Categories</h3>
+        <h3 className="sidebar-heading">
+          Categories
+        </h3>
 
-        <ul className="categories">
+        <ul className="sidebar-categories">
           <li>
             <Link to="/categories/3d-printers">
               3D Printers
@@ -106,12 +115,12 @@ function Sidebar() {
       <div className="sidebar-box">
         <Link
           to="/articles"
-          className="btn btn-outline-primary w-100"
+          className="sidebar-all-link"
         >
           View All Articles
         </Link>
       </div>
-    </div>
+    </aside>
   );
 }
 

@@ -1,35 +1,183 @@
-/* Shared form styling */
-.form-control {
-  height: 54px;
-  border-color: rgba(0, 0, 0, 0.1);
-  background-color: transparent !important;
-  margin-bottom: 10px;
+/* ==================================================
+   Forms Layout
+================================================== */
+
+.form-page {
+  padding: 70px 0;
 }
 
-.form-control:active,
-.form-control:focus {
+.form-container {
+  width: min(760px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.form-container-small {
+  width: min(520px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.form-card {
+  padding: 40px;
+
+  background-color: #f8f9fa;
+
+  border-radius: 10px;
+}
+
+.form-title {
+  margin: 0 0 30px;
+
+  font-size: 32px;
+  font-weight: 700;
+
+  color: #214252;
+
+  text-align: center;
+}
+
+
+/* ==================================================
+   Form Groups
+================================================== */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 25px;
+}
+
+.form-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #212529;
+}
+
+
+/* ==================================================
+   Inputs
+================================================== */
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+
+  padding: 12px 14px;
+
+  font-family: inherit;
+  font-size: 15px;
+
+  color: #212529;
+
+  background-color: #fff;
+
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+
   outline: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border-color: rgba(0, 0, 0, 0.2) !important;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.form-control::-webkit-input-placeholder {
-  color: rgba(0, 0, 0, 0.7);
+.form-input,
+.form-select {
+  height: 48px;
 }
 
-.form-control::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.7);
+.form-textarea {
+  resize: vertical;
+
+  line-height: 1.6;
 }
 
-.form-control:-ms-input-placeholder {
-  color: rgba(0, 0, 0, 0.7);
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #214252;
+
+  box-shadow: 0 0 0 3px rgba(33, 66, 82, 0.1);
 }
 
-.form-control:-moz-placeholder {
-  color: rgba(0, 0, 0, 0.7);
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #8a8a8a;
 }
 
-textarea {
-  height: auto !important;
+
+/* ==================================================
+   Validation
+================================================== */
+
+.form-error {
+  margin: 6px 0 0;
+
+  font-size: 13px;
+
+  color: #dc3545;
+}
+
+
+/* ==================================================
+   Form Button
+================================================== */
+
+.form-submit {
+  width: 100%;
+
+  padding: 13px 20px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+
+  color: #fff;
+
+  background-color: #214252;
+
+  border: 1px solid #214252;
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.form-submit:hover {
+  background-color: #1a3542;
+  border-color: #1a3542;
+}
+
+
+/* ==================================================
+   Form Footer
+================================================== */
+
+.form-footer {
+  margin: 25px 0 0;
+
+  text-align: center;
+}
+
+.form-footer a {
+  color: #214252;
+
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
 }

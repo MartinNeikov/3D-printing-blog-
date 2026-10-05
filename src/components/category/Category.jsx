@@ -14,17 +14,18 @@ const categoryNames = {
 function Category() {
   const { categoryName } = useParams();
 
+  const category = categoryNames[categoryName];
+
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const category = categoryNames[categoryName];
 
   useEffect(() => {
     const controller = new AbortController();
 
     async function loadArticles() {
       if (!category) {
+        setArticles([]);
         setIsLoading(false);
         return;
       }
@@ -51,7 +52,10 @@ function Category() {
         }
 
         console.error("Failed to load category articles:", error);
-        setError("Unable to load articles. Please try again later.");
+
+        setError(
+          "Unable to load articles. Please try again later."
+        );
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -68,77 +72,73 @@ function Category() {
 
   if (!category) {
     return (
-      <div className="section">
-        <div className="container">
+      <section className="page-status">
+        <div className="content-container">
           <h1>Category not found</h1>
           <p>The requested category does not exist.</p>
 
-          <Link to="/articles" className="btn btn-primary">
-            View All Articles
+          <Link to="/articles" className="read-more">
+            Back to Articles
           </Link>
         </div>
-      </div>
+      </section>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <section className="page-status">
+        <div className="content-container">
+          <p>Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="page-status">
+        <div className="content-container">
+          <h2>Unable to load articles</h2>
+          <p>{error}</p>
+        </div>
+      </section>
     );
   }
 
   return (
-    <div className="section search-result-wrap">
-      <div className="container">
-        <div className="row">
-          <div className="col-12">
-            <div className="heading">Category: {category}</div>
-          </div>
+    <>
+      <section className="page-hero">
+        <div className="content-container">
+          <h1 className="page-hero-title">{category}</h1>
         </div>
+      </section>
 
-        <div className="row posts-entry">
-          <div className="col-lg-8">
-            {isLoading && <p>Loading articles...</p>}
-
-            {error && (
-              <div>
-                <h2>Unable to load articles</h2>
-                <p>Please try again later.</p>
-              </div>
-            )}
-
-            {!isLoading && !error && articles.length === 0 && (
-              <div>
-                <h2>No articles yet</h2>
-                <p>
-                  There are currently no articles in the {category} category.
-                </p>
-              </div>
-            )}
-
-            {!isLoading &&
-              !error &&
+      <section className="section">
+        <div className="content-container article-page-layout">
+          <div className="article-results">
+            {articles.length > 0 ? (
               articles.map((article) => (
-                <div
-                  className="blog-entry d-flex blog-entry-search-item"
+                <article
+                  className="article-list-item"
                   key={article.id}
                 >
                   <Link
                     to={`/articles/${article.id}`}
-                    className="img-link me-4"
+                    className="article-list-image-link"
                   >
                     <img
                       src={article.image_url}
                       alt={article.title}
-                      className="img-fluid"
+                      className="article-list-image"
                     />
                   </Link>
 
-                  <div>
+                  <div className="article-list-content">
                     <span className="date">
-                      {new Date(article.created_at).toLocaleDateString()}
-                      {" • "}
-                      <Link
-                        to={`/categories/${article.category
-                          .toLowerCase()
-                          .replaceAll(" ", "-")}`}
-                      >
-                        {article.category}
-                      </Link>
+                      {new Date(
+                        article.created_at
+                      ).toLocaleDateString()}
                     </span>
 
                     <h2>
@@ -149,23 +149,24 @@ function Category() {
 
                     <p>{article.short_description}</p>
 
-                    <p>
-                      <Link
-                        to={`/articles/${article.id}`}
-                        className="btn btn-sm btn-outline-primary"
-                      >
-                        Read More
-                      </Link>
-                    </p>
+                    <Link
+                      to={`/articles/${article.id}`}
+                      className="read-more"
+                    >
+                      Read More
+                    </Link>
                   </div>
-                </div>
-              ))}
+                </article>
+              ))
+            ) : (
+              <p>No articles in this category yet.</p>
+            )}
           </div>
 
           <Sidebar />
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
 

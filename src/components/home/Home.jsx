@@ -54,7 +54,10 @@ function Home() {
         }
 
         console.error("Failed to load home articles:", error);
-        setError("Unable to load articles. Please try again later.");
+
+        setError(
+          "Unable to load articles. Please try again later."
+        );
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -77,35 +80,33 @@ function Home() {
 
   return (
     <>
-      <section className="section bg-light">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6 mb-4 mb-lg-0">
-              <h1 className="mb-3">
-                Learn. Share. Print Better.
-              </h1>
+      <section className="section home-hero">
+        <div className="content-container home-hero-layout">
+          <div className="home-hero-content">
+            <h1 className="home-hero-title">
+              Learn. Share. Print Better.
+            </h1>
 
-              <p className="mb-4">
-                PrintForge is a 3D printing community for sharing
-                practical guides, printer knowledge, filament tips,
-                print settings, troubleshooting and creative projects.
-              </p>
-            </div>
+            <p className="home-hero-description">
+              PrintForge is a 3D printing community for sharing
+              practical guides, printer knowledge, filament tips,
+              print settings, troubleshooting and creative projects.
+            </p>
+          </div>
 
-            <div className="col-lg-6">
-              <img
-                src="/images/hero/3d-printing-hero.png"
-                alt="3D printing workspace"
-                className="img-fluid rounded"
-              />
-            </div>
+          <div className="home-hero-image-wrapper">
+            <img
+              src="/images/hero/3d-printing-hero.png"
+              alt="3D printing workspace"
+              className="home-hero-image"
+            />
           </div>
         </div>
       </section>
 
       {isLoading && (
         <section className="section">
-          <div className="container">
+          <div className="content-container">
             <p>Loading articles...</p>
           </div>
         </section>
@@ -113,7 +114,7 @@ function Home() {
 
       {error && (
         <section className="section">
-          <div className="container">
+          <div className="content-container">
             <h2>Unable to load articles</h2>
             <p>{error}</p>
           </div>
@@ -124,16 +125,16 @@ function Home() {
         <>
           {featuredArticles.length > 0 && (
             <section className="section">
-              <div className="container">
+              <div className="content-container">
                 <SectionHeader
                   title="Latest Articles"
                   link="/articles"
                 />
 
-                <div className="row align-items-stretch retro-layout">
+                <div className="featured-articles-grid retro-layout">
                   {featuredArticles.map((article) => (
                     <div
-                      className="col-md-4 mb-4"
+                      className="featured-article-item"
                       key={article.id}
                     >
                       <FeaturedArticleCard
@@ -163,17 +164,17 @@ function Home() {
                 className="section posts-entry"
                 key={category.title}
               >
-                <div className="container">
+                <div className="content-container">
                   <SectionHeader
                     title={category.title}
                     link={category.route}
                   />
 
                   {categoryArticles.length > 0 ? (
-                    <div className="row">
+                    <div className="article-grid">
                       {categoryArticles.map((article) => (
                         <div
-                          className="col-md-6 col-lg-4 mb-4"
+                          className="article-grid-item"
                           key={article.id}
                         >
                           <ArticleCard

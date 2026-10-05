@@ -7,7 +7,7 @@ function ArticleCard({ id, image, date, title, description }) {
         <img
           src={image}
           alt={title}
-          className="img-fluid"
+          className="article-card-image"
         />
       </Link>
 
