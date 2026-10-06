@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { getAllArticles } from "../../services/articleService.js";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 function Catalog() {
@@ -17,24 +17,16 @@ function Catalog() {
         setIsLoading(true);
         setError(null);
 
-        const { data, error } = await supabase
-          .from("articles")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .abortSignal(controller.signal);
+        const data = await getAllArticles(controller.signal);
 
-        if (error) {
-          throw error;
-        }
-
-        setArticles(data ?? []);
+        setArticles(data);
       } catch (error) {
         if (controller.signal.aborted) {
           return;
         }
 
         console.error("Failed to load articles:", error);
-        setError(error.message);
+        setError("Unable to load articles. Please try again later.");
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -64,7 +56,7 @@ function Catalog() {
       <section className="page-status">
         <div className="content-container">
           <h2>Unable to load articles</h2>
-          <p>Please try again later.</p>
+          <p>{error}</p>
         </div>
       </section>
     );

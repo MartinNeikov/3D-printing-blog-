@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { getArticleById } from "../../services/articleService.js";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 function ArticleDetails() {
@@ -19,16 +19,10 @@ function ArticleDetails() {
         setIsLoading(true);
         setError(null);
 
-        const { data, error } = await supabase
-          .from("articles")
-          .select("*")
-          .eq("id", articleId)
-          .abortSignal(controller.signal)
-          .maybeSingle();
-
-        if (error) {
-          throw error;
-        }
+        const data = await getArticleById(
+          articleId,
+          controller.signal
+        );
 
         setArticle(data);
       } catch (error) {
@@ -37,7 +31,10 @@ function ArticleDetails() {
         }
 
         console.error("Failed to load article:", error);
-        setError(error.message);
+
+        setError(
+          "Unable to load article. Please try again later."
+        );
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -67,7 +64,7 @@ function ArticleDetails() {
       <section className="page-status">
         <div className="content-container">
           <h2>Unable to load article</h2>
-          <p>Please try again later.</p>
+          <p>{error}</p>
         </div>
       </section>
     );
@@ -78,7 +75,9 @@ function ArticleDetails() {
       <section className="page-status">
         <div className="content-container">
           <h2>Article not found</h2>
-          <p>The article you are looking for does not exist.</p>
+          <p>
+            The article you are looking for does not exist.
+          </p>
         </div>
       </section>
     );
@@ -112,7 +111,7 @@ function ArticleDetails() {
               <span>
                 {" • "}
                 {new Date(
-                  article.created_at,
+                  article.created_at
                 ).toLocaleDateString()}
               </span>
             </div>

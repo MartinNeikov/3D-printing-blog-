@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { getArticlesByCategory } from "../../services/articleService.js";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 const categoryNames = {
@@ -34,24 +34,21 @@ function Category() {
         setIsLoading(true);
         setError("");
 
-        const { data, error } = await supabase
-          .from("articles")
-          .select("*")
-          .eq("category", category)
-          .order("created_at", { ascending: false })
-          .abortSignal(controller.signal);
+        const data = await getArticlesByCategory(
+          category,
+          controller.signal
+        );
 
-        if (error) {
-          throw error;
-        }
-
-        setArticles(data ?? []);
+        setArticles(data);
       } catch (error) {
         if (controller.signal.aborted) {
           return;
         }
 
-        console.error("Failed to load category articles:", error);
+        console.error(
+          "Failed to load category articles:",
+          error
+        );
 
         setError(
           "Unable to load articles. Please try again later."
@@ -75,6 +72,7 @@ function Category() {
       <section className="page-status">
         <div className="content-container">
           <h1>Category not found</h1>
+
           <p>The requested category does not exist.</p>
 
           <Link to="/articles" className="read-more">
@@ -110,7 +108,9 @@ function Category() {
     <>
       <section className="page-hero">
         <div className="content-container">
-          <h1 className="page-hero-title">{category}</h1>
+          <h1 className="page-hero-title">
+            {category}
+          </h1>
         </div>
       </section>
 
@@ -142,12 +142,16 @@ function Category() {
                     </span>
 
                     <h2>
-                      <Link to={`/articles/${article.id}`}>
+                      <Link
+                        to={`/articles/${article.id}`}
+                      >
                         {article.title}
                       </Link>
                     </h2>
 
-                    <p>{article.short_description}</p>
+                    <p>
+                      {article.short_description}
+                    </p>
 
                     <Link
                       to={`/articles/${article.id}`}
@@ -159,7 +163,9 @@ function Category() {
                 </article>
               ))
             ) : (
-              <p>No articles in this category yet.</p>
+              <p>
+                No articles in this category yet.
+              </p>
             )}
           </div>
 
