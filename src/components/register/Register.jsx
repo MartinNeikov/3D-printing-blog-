@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
+import { useAuth } from "../../hooks/useAuth.js";
 import { validateRegister } from "../../utils/validation.js";
 
 function Register() {
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -14,6 +16,8 @@ function Register() {
   });
 
   const [errors, setErrors] = useState({});
+  const [authError, setAuthError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -31,7 +35,7 @@ function Register() {
     }
   }
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
 
     const validationErrors = validateRegister(formData);
@@ -41,9 +45,27 @@ function Register() {
       return;
     }
 
-    setErrors({});
+    try {
+      setErrors({});
+      setAuthError("");
+      setIsSubmitting(true);
 
-    navigate("/");
+      await register(
+        formData.name,
+        formData.email,
+        formData.password
+      );
+
+      navigate("/");
+    } catch (error) {
+      console.error("Registration failed:", error);
+
+      setAuthError(
+        error.message || "Registration failed. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -153,11 +175,20 @@ function Register() {
               )}
             </div>
 
+            {authError && (
+              <p className="form-error">
+                {authError}
+              </p>
+            )}
+
             <button
               type="submit"
               className="form-submit"
+              disabled={isSubmitting}
             >
-              Register
+              {isSubmitting
+                ? "Registering..."
+                : "Register"}
             </button>
           </form>
 

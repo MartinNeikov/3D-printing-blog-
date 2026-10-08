@@ -290,3 +290,22 @@
   transform: rotate(45deg);
   transform-origin: left center;
 }
+
+/* Logout */
+.header-logout {
+  padding: 10px;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+
+  border: 0;
+
+  cursor: pointer;
+}
+
+.header-logout:hover {
+  color: #fff;
+}

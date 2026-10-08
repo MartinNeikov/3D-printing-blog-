@@ -1,6 +1,10 @@
 import { Link } from "react-router";
 
+import { useAuth } from "../../hooks/useAuth.js";
+
 function Footer() {
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
     <footer className="site-footer">
       <div className="footer-container">
@@ -62,11 +66,13 @@ function Footer() {
                   </Link>
                 </li>
 
-                <li>
-                  <Link to="/articles/create">
-                    Create Article
-                  </Link>
-                </li>
+                {!isLoading && isAuthenticated && (
+                  <li>
+                    <Link to="/articles/create">
+                      Create Article
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

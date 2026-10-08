@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 
+import { useAuth } from "../../hooks/useAuth.js";
+
 function Header() {
   const navigate = useNavigate();
+
+  const {
+    isAuthenticated,
+    isLoading,
+    logout,
+  } = useAuth();
+
   const [searchValue, setSearchValue] = useState("");
 
   function searchSubmitHandler(e) {
@@ -16,6 +25,16 @@ function Header() {
 
     navigate(`/search?q=${encodeURIComponent(value)}`);
     setSearchValue("");
+  }
+
+  async function logoutHandler() {
+    try {
+      await logout();
+
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   }
 
   return (
@@ -73,35 +92,53 @@ function Header() {
                 </NavLink>
               </li>
 
-              <li>
-                <NavLink to="/articles/create">
-                  Create Article
-                </NavLink>
-              </li>
+              {!isLoading && isAuthenticated && (
+                <li>
+                  <NavLink to="/articles/create">
+                    Create Article
+                  </NavLink>
+                </li>
+              )}
             </ul>
           </li>
 
-          <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                isActive ? "active" : ""
-              }
-            >
-              Login
-            </NavLink>
-          </li>
+          {!isLoading && !isAuthenticated && (
+            <>
+              <li>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  Login
+                </NavLink>
+              </li>
 
-          <li>
-            <NavLink
-              to="/register"
-              className={({ isActive }) =>
-                isActive ? "active" : ""
-              }
-            >
-              Register
-            </NavLink>
-          </li>
+              <li>
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  Register
+                </NavLink>
+              </li>
+            </>
+          )}
+
+          {!isLoading && isAuthenticated && (
+            <li>
+              <button
+                type="button"
+                className="header-logout"
+                onClick={logoutHandler}
+              >
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
 
         <form
@@ -113,7 +150,9 @@ function Header() {
             className="header-search-input"
             placeholder="Search..."
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) =>
+              setSearchValue(e.target.value)
+            }
           />
 
           <button

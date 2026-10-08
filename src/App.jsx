@@ -11,6 +11,8 @@ import Login from "./components/login/Login.jsx";
 import Register from "./components/register/Register.jsx";
 import Search from "./components/search/Search.jsx";
 import NotFound from "./components/not-found/NotFound.jsx";
+import PrivateRoute from "./components/route-guards/PrivateRoute.jsx";
+import GuestRoute from "./components/route-guards/GuestRoute.jsx";
 
 function App() {
   return (
@@ -19,14 +21,10 @@ function App() {
         <Route index element={<Home />} />
 
         <Route path="articles" element={<Catalog />} />
-        <Route path="articles/create" element={<CreateArticle />} />
+
         <Route
           path="articles/:articleId"
           element={<ArticleDetails />}
-        />
-        <Route
-          path="articles/:articleId/edit"
-          element={<EditArticle />}
         />
 
         <Route
@@ -36,8 +34,22 @@ function App() {
 
         <Route path="search" element={<Search />} />
 
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route element={<PrivateRoute />}>
+          <Route
+            path="articles/create"
+            element={<CreateArticle />}
+          />
+
+          <Route
+            path="articles/:articleId/edit"
+            element={<EditArticle />}
+          />
+        </Route>
+
+        <Route element={<GuestRoute />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Route>

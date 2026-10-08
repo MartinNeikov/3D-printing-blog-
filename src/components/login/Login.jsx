@@ -1,25 +1,53 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
+import { useAuth } from "../../hooks/useAuth.js";
+
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const [authError, setAuthError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   function changeHandler(e) {
     setFormData((state) => ({
       ...state,
       [e.target.name]: e.target.value,
     }));
+
+    if (authError) {
+      setAuthError("");
+    }
   }
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
 
-    navigate("/");
+    try {
+      setAuthError("");
+      setIsSubmitting(true);
+
+      await login(
+        formData.email.trim(),
+        formData.password
+      );
+
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+
+      setAuthError(
+        error.message || "Login failed. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -67,11 +95,18 @@ function Login() {
               />
             </div>
 
+            {authError && (
+              <p className="form-error">
+                {authError}
+              </p>
+            )}
+
             <button
               type="submit"
               className="form-submit"
+              disabled={isSubmitting}
             >
-              Login
+              {isSubmitting ? "Logging in..." : "Login"}
             </button>
           </form>
 
