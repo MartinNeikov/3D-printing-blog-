@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { searchArticles } from "../../services/articleService.js";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 function Search() {
@@ -17,7 +17,7 @@ function Search() {
   useEffect(() => {
     const controller = new AbortController();
 
-    async function searchArticles() {
+    async function loadSearchResults() {
       if (!query) {
         setArticles([]);
         setIsLoading(false);
@@ -30,30 +30,25 @@ function Search() {
         setIsLoading(true);
         setError("");
 
-        const safeQuery = query.replaceAll(",", " ");
+        const data = await searchArticles(
+          query,
+          controller.signal
+        );
 
-        const { data, error } = await supabase
-          .from("articles")
-          .select("*")
-          .or(
-            `title.ilike.%${safeQuery}%,short_description.ilike.%${safeQuery}%,category.ilike.%${safeQuery}%`,
-          )
-          .order("created_at", { ascending: false })
-          .abortSignal(controller.signal);
-
-        if (error) {
-          throw error;
-        }
-
-        setArticles(data ?? []);
+        setArticles(data);
       } catch (error) {
         if (controller.signal.aborted) {
           return;
         }
 
-        console.error("Failed to search articles:", error);
+        console.error(
+          "Failed to search articles:",
+          error
+        );
 
-        setError("Unable to search articles. Please try again later.");
+        setError(
+          "Unable to search articles. Please try again later."
+        );
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -61,7 +56,7 @@ function Search() {
       }
     }
 
-    searchArticles();
+    loadSearchResults();
 
     return () => {
       controller.abort();
@@ -85,25 +80,37 @@ function Search() {
     <>
       <section className="page-hero">
         <div className="content-container">
-          <h1 className="page-hero-title">Search</h1>
+          <h1 className="page-hero-title">
+            Search
+          </h1>
         </div>
       </section>
 
       <section className="section">
         <div className="content-container">
           <div className="search-page-header">
-            <h2 className="search-page-title">Search Articles</h2>
+            <h2 className="search-page-title">
+              Search Articles
+            </h2>
 
-            <form onSubmit={submitHandler} className="search-page-form">
+            <form
+              onSubmit={submitHandler}
+              className="search-page-form"
+            >
               <input
                 type="search"
                 className="search-page-input"
                 placeholder="Search by title, category..."
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) =>
+                  setSearchValue(e.target.value)
+                }
               />
 
-              <button type="submit" className="form-submit">
+              <button
+                type="submit"
+                className="form-submit"
+              >
                 Search
               </button>
             </form>
@@ -113,7 +120,9 @@ function Search() {
             <div className="article-results">
               {query && (
                 <div className="search-results-title">
-                  <h2>Results for &quot;{query}&quot;</h2>
+                  <h2>
+                    Results for &quot;{query}&quot;
+                  </h2>
                 </div>
               )}
 
@@ -121,14 +130,20 @@ function Search() {
 
               {error && <p>{error}</p>}
 
-              {!isLoading && !error && query && articles.length === 0 && (
-                <p>No articles found.</p>
-              )}
+              {!isLoading &&
+                !error &&
+                query &&
+                articles.length === 0 && (
+                  <p>No articles found.</p>
+                )}
 
               {!isLoading &&
                 !error &&
                 articles.map((article) => (
-                  <article className="article-list-item" key={article.id}>
+                  <article
+                    className="article-list-item"
+                    key={article.id}
+                  >
                     <Link
                       to={`/articles/${article.id}`}
                       className="article-list-image-link"
@@ -142,18 +157,24 @@ function Search() {
 
                     <div className="article-list-content">
                       <span className="date">
-                        {new Date(article.created_at).toLocaleDateString()}
+                        {new Date(
+                          article.created_at
+                        ).toLocaleDateString()}
                         {" • "}
                         {article.category}
                       </span>
 
                       <h2>
-                        <Link to={`/articles/${article.id}`}>
+                        <Link
+                          to={`/articles/${article.id}`}
+                        >
                           {article.title}
                         </Link>
                       </h2>
 
-                      <p>{article.short_description}</p>
+                      <p>
+                        {article.short_description}
+                      </p>
 
                       <Link
                         to={`/articles/${article.id}`}

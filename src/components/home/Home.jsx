@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { getAllArticles } from "../../services/articleService.js";
 
 import ArticleCard from "../cards/article-card/ArticleCard.jsx";
 import FeaturedArticleCard from "../cards/featured-article-card/FeaturedArticleCard.jsx";
@@ -35,19 +35,9 @@ function Home() {
 
     async function loadArticles() {
       try {
-        const { data, error } = await supabase
-          .from("articles")
-          .select(
-            "id, title, category, short_description, image_url, created_at"
-          )
-          .order("created_at", { ascending: false })
-          .abortSignal(controller.signal);
+        const data = await getAllArticles(controller.signal);
 
-        if (error) {
-          throw error;
-        }
-
-        setArticles(data ?? []);
+        setArticles(data);
       } catch (error) {
         if (controller.signal.aborted) {
           return;
@@ -55,9 +45,7 @@ function Home() {
 
         console.error("Failed to load home articles:", error);
 
-        setError(
-          "Unable to load articles. Please try again later."
-        );
+        setError("Unable to load articles. Please try again later.");
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -83,14 +71,12 @@ function Home() {
       <section className="section home-hero">
         <div className="content-container home-hero-layout">
           <div className="home-hero-content">
-            <h1 className="home-hero-title">
-              Learn. Share. Print Better.
-            </h1>
+            <h1 className="home-hero-title">Learn. Share. Print Better.</h1>
 
             <p className="home-hero-description">
-              PrintForge is a 3D printing community for sharing
-              practical guides, printer knowledge, filament tips,
-              print settings, troubleshooting and creative projects.
+              PrintForge is a 3D printing community for sharing practical
+              guides, printer knowledge, filament tips, print settings,
+              troubleshooting and creative projects.
             </p>
           </div>
 
@@ -126,17 +112,11 @@ function Home() {
           {featuredArticles.length > 0 && (
             <section className="section">
               <div className="content-container">
-                <SectionHeader
-                  title="Latest Articles"
-                  link="/articles"
-                />
+                <SectionHeader title="Latest Articles" link="/articles" />
 
                 <div className="featured-articles-grid retro-layout">
                   {featuredArticles.map((article) => (
-                    <div
-                      className="featured-article-item"
-                      key={article.id}
-                    >
+                    <div className="featured-article-item" key={article.id}>
                       <FeaturedArticleCard
                         id={article.id}
                         image={article.image_url}
@@ -153,48 +133,30 @@ function Home() {
 
           {categories.map((category) => {
             const categoryArticles = articles
-              .filter(
-                (article) =>
-                  article.category === category.title
-              )
+              .filter((article) => article.category === category.title)
               .slice(0, 3);
 
             return (
-              <section
-                className="section"
-                key={category.title}
-              >
+              <section className="section" key={category.title}>
                 <div className="content-container">
-                  <SectionHeader
-                    title={category.title}
-                    link={category.route}
-                  />
+                  <SectionHeader title={category.title} link={category.route} />
 
                   {categoryArticles.length > 0 ? (
                     <div className="article-grid">
                       {categoryArticles.map((article) => (
-                        <div
-                          className="article-grid-item"
-                          key={article.id}
-                        >
+                        <div className="article-grid-item" key={article.id}>
                           <ArticleCard
                             id={article.id}
                             image={article.image_url}
-                            date={formatDate(
-                              article.created_at
-                            )}
+                            date={formatDate(article.created_at)}
                             title={article.title}
-                            description={
-                              article.short_description
-                            }
+                            description={article.short_description}
                           />
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p>
-                      No articles in this category yet.
-                    </p>
+                    <p>No articles in this category yet.</p>
                   )}
                 </div>
               </section>

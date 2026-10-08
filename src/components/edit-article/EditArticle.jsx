@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { getArticleById } from "../../services/articleService.js";
 import { validateArticle } from "../../utils/validation.js";
 
 function EditArticle() {
@@ -28,19 +28,8 @@ function EditArticle() {
         setIsLoading(true);
         setLoadError("");
 
-        const { data, error } = await supabase
-          .from("articles")
-          .select(
-            "title, category, short_description, content, image_url",
-          )
-          .eq("id", articleId)
-          .abortSignal(controller.signal)
-          .maybeSingle();
-
-        if (error) {
-          throw error;
-        }
-
+        const data = await getArticleById(articleId, controller.signal);
+        
         if (!data) {
           setArticleExists(false);
           return;
@@ -60,9 +49,7 @@ function EditArticle() {
 
         console.error("Failed to load article:", error);
 
-        setLoadError(
-          "Unable to load the article. Please try again later.",
-        );
+        setLoadError("Unable to load the article. Please try again later.");
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -161,11 +148,7 @@ function EditArticle() {
                 onChange={changeHandler}
               />
 
-              {errors.title && (
-                <p className="form-error">
-                  {errors.title}
-                </p>
-              )}
+              {errors.title && <p className="form-error">{errors.title}</p>}
             </div>
 
             <div className="form-group">
@@ -183,24 +166,17 @@ function EditArticle() {
                 <option value="">Select a category</option>
                 <option value="3D Printers">3D Printers</option>
                 <option value="Filaments">Filaments</option>
-                <option value="Print Settings">
-                  Print Settings
-                </option>
+                <option value="Print Settings">Print Settings</option>
                 <option value="Projects">Projects</option>
               </select>
 
               {errors.category && (
-                <p className="form-error">
-                  {errors.category}
-                </p>
+                <p className="form-error">{errors.category}</p>
               )}
             </div>
 
             <div className="form-group">
-              <label
-                htmlFor="short_description"
-                className="form-label"
-              >
+              <label htmlFor="short_description" className="form-label">
                 Short Description
               </label>
 
@@ -214,9 +190,7 @@ function EditArticle() {
               />
 
               {errors.short_description && (
-                <p className="form-error">
-                  {errors.short_description}
-                </p>
+                <p className="form-error">{errors.short_description}</p>
               )}
             </div>
 
@@ -234,11 +208,7 @@ function EditArticle() {
                 onChange={changeHandler}
               />
 
-              {errors.content && (
-                <p className="form-error">
-                  {errors.content}
-                </p>
-              )}
+              {errors.content && <p className="form-error">{errors.content}</p>}
             </div>
 
             <div className="form-group">
@@ -256,16 +226,11 @@ function EditArticle() {
               />
 
               {errors.image_url && (
-                <p className="form-error">
-                  {errors.image_url}
-                </p>
+                <p className="form-error">{errors.image_url}</p>
               )}
             </div>
 
-            <button
-              type="submit"
-              className="form-submit"
-            >
+            <button type="submit" className="form-submit">
               Save Changes
             </button>
           </form>

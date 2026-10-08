@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
-import { supabase } from "../../lib/supabaseClient.js";
+import { getRecentArticles } from "../../services/articleService.js";
 
 function Sidebar() {
   const [recentArticles, setRecentArticles] = useState([]);
@@ -11,18 +11,12 @@ function Sidebar() {
 
     async function loadRecentArticles() {
       try {
-        const { data, error } = await supabase
-          .from("articles")
-          .select("id, title, image_url, created_at")
-          .order("created_at", { ascending: false })
-          .limit(3)
-          .abortSignal(controller.signal);
+        const data = await getRecentArticles(
+          3,
+          controller.signal
+        );
 
-        if (error) {
-          throw error;
-        }
-
-        setRecentArticles(data ?? []);
+        setRecentArticles(data);
       } catch (error) {
         if (controller.signal.aborted) {
           return;
@@ -30,7 +24,7 @@ function Sidebar() {
 
         console.error(
           "Failed to load recent articles:",
-          error,
+          error
         );
       }
     }
@@ -70,7 +64,7 @@ function Sidebar() {
 
                   <span className="recent-article-date">
                     {new Date(
-                      article.created_at,
+                      article.created_at
                     ).toLocaleDateString()}
                   </span>
                 </div>
