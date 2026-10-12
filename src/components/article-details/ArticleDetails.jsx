@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 import {
   deleteArticle,
   getArticleById,
 } from "../../services/articleService.js";
 import { useAuth } from "../../hooks/useAuth.js";
+
+import { deleteArticleImage } from "../../services/imageService.js";
 
 import Sidebar from "../sidebar/Sidebar.jsx";
 
@@ -33,10 +31,7 @@ function ArticleDetails() {
         setIsLoading(true);
         setError(null);
 
-        const data = await getArticleById(
-          articleId,
-          controller.signal
-        );
+        const data = await getArticleById(articleId, controller.signal);
 
         setArticle(data);
       } catch (error) {
@@ -46,9 +41,7 @@ function ArticleDetails() {
 
         console.error("Failed to load article:", error);
 
-        setError(
-          "Unable to load article. Please try again later."
-        );
+        setError("Unable to load article. Please try again later.");
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -63,13 +56,11 @@ function ArticleDetails() {
     };
   }, [articleId]);
 
-  const isOwner =
-    isAuthenticated &&
-    article?.author_id === user?.id;
+  const isOwner = isAuthenticated && article?.author_id === user?.id;
 
   async function deleteHandler() {
     const shouldDelete = window.confirm(
-      "Are you sure you want to delete this article?"
+      "Are you sure you want to delete this article?",
     );
 
     if (!shouldDelete) {
@@ -82,13 +73,23 @@ function ArticleDetails() {
 
       await deleteArticle(articleId);
 
+      if (article.image_storage_path) {
+        try {
+          await deleteArticleImage(article.image_storage_path);
+        } catch (cleanupError) {
+          console.error(
+            "Failed to remove article image from storage:",
+            cleanupError,
+          );
+        }
+      }
+
       navigate("/articles");
     } catch (error) {
       console.error("Failed to delete article:", error);
 
       setDeleteError(
-        error.message ||
-          "Unable to delete the article. Please try again."
+        error.message || "Unable to delete the article. Please try again.",
       );
     } finally {
       setIsDeleting(false);
@@ -121,9 +122,7 @@ function ArticleDetails() {
       <section className="page-status">
         <div className="content-container">
           <h2>Article not found</h2>
-          <p>
-            The article you are looking for does not exist.
-          </p>
+          <p>The article you are looking for does not exist.</p>
         </div>
       </section>
     );
@@ -134,31 +133,23 @@ function ArticleDetails() {
       <section
         className="article-hero"
         style={{
-          backgroundImage:
-            "url('/images/hero/3d-printing-hero.png')",
+          backgroundImage: "url('/images/hero/3d-printing-hero.png')",
         }}
       >
         <div className="content-container">
           <div className="article-hero-content">
-            <h1 className="article-hero-title">
-              {article.title}
-            </h1>
+            <h1 className="article-hero-title">{article.title}</h1>
 
             <div className="post-meta">
               <figure className="author-figure">
-                <img
-                  src="/images/authors/Martin.png"
-                  alt="Author"
-                />
+                <img src="/images/authors/Martin.png" alt="Author" />
               </figure>
 
               <span>By Martin</span>
 
               <span>
                 {" • "}
-                {new Date(
-                  article.created_at
-                ).toLocaleDateString()}
+                {new Date(article.created_at).toLocaleDateString()}
               </span>
             </div>
 
@@ -177,18 +168,12 @@ function ArticleDetails() {
                   onClick={deleteHandler}
                   disabled={isDeleting}
                 >
-                  {isDeleting
-                    ? "Deleting..."
-                    : "Delete"}
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </button>
               </div>
             )}
 
-            {deleteError && (
-              <p className="form-error">
-                {deleteError}
-              </p>
-            )}
+            {deleteError && <p className="form-error">{deleteError}</p>}
           </div>
         </div>
       </section>

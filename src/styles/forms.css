@@ -75,7 +75,6 @@
   font-size: 15px;
 
   color: #212529;
-
   background-color: #fff;
 
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -114,6 +113,53 @@
 
 
 /* ==================================================
+   Image Upload
+================================================== */
+
+.form-radio-group {
+  display: flex;
+  gap: 24px;
+
+  margin-top: 5px;
+}
+
+.form-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+
+  color: #212529;
+
+  cursor: pointer;
+}
+
+.form-radio-option input {
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  accent-color: #214252;
+
+  cursor: pointer;
+}
+
+.form-help {
+  margin: 8px 0 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #848d92;
+}
+
+.form-image-error {
+  margin-bottom: 20px;
+}
+
+/* ==================================================
    Validation
 ================================================== */
 
@@ -143,7 +189,6 @@
   text-transform: uppercase;
 
   color: #fff;
-
   background-color: #214252;
 
   border: 1px solid #214252;
@@ -153,12 +198,20 @@
 
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
-.form-submit:hover {
+.form-submit:hover:not(:disabled) {
   background-color: #1a3542;
+
   border-color: #1a3542;
+}
+
+.form-submit:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
 }
 
 

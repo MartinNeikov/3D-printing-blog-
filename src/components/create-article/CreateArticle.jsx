@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { createArticle } from "../../services/articleService.js";
+import {
+  deleteArticleImage,
+  uploadArticleImage,
+} from "../../services/imageService.js";
+
+import { useAuth } from "../../hooks/useAuth.js";
 import { validateArticle } from "../../utils/validation.js";
+
+import ArticleForm from "../article-form/ArticleForm.jsx";
 
 function CreateArticle() {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -15,7 +26,11 @@ function CreateArticle() {
     image_url: "",
   });
 
+  const [imageSource, setImageSource] = useState("url");
+  const [imageFile, setImageFile] = useState(null);
+
   const [errors, setErrors] = useState({});
+  const [imageError, setImageError] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,9 +49,44 @@ function CreateArticle() {
       }));
     }
 
+    if (name === "image_url") {
+      setImageError("");
+    }
+
     if (submitError) {
       setSubmitError("");
     }
+  }
+
+  function imageSourceChangeHandler(e) {
+    const selectedSource = e.target.value;
+
+    setImageSource(selectedSource);
+    setImageError("");
+    setSubmitError("");
+
+    if (selectedSource === "url") {
+      setImageFile(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+
+    if (selectedSource === "upload") {
+      setFormData((state) => ({
+        ...state,
+        image_url: "",
+      }));
+    }
+  }
+
+  function imageFileChangeHandler(e) {
+    const file = e.target.files[0] ?? null;
+
+    setImageFile(file);
+    setImageError("");
+    setSubmitError("");
   }
 
   async function submitHandler(e) {
@@ -44,32 +94,99 @@ function CreateArticle() {
 
     const validationErrors = validateArticle(formData);
 
+    if (imageSource !== "url") {
+      delete validationErrors.image_url;
+    }
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
+    if (
+      imageSource === "url" &&
+      !formData.image_url.trim()
+    ) {
+      setImageError("Please provide an image URL.");
+      return;
+    }
+
+    if (
+      imageSource === "upload" &&
+      !imageFile
+    ) {
+      setImageError(
+        "Please select an image to upload."
+      );
+      return;
+    }
+
+    let uploadedStoragePath = null;
+
     try {
       setErrors({});
+      setImageError("");
       setSubmitError("");
       setIsSubmitting(true);
+
+      let imageUrl = null;
+      let imageStoragePath = null;
+
+      if (imageSource === "url") {
+        imageUrl = formData.image_url.trim();
+      }
+
+      if (imageSource === "upload") {
+        const uploadedImage =
+          await uploadArticleImage(
+            imageFile,
+            user.id
+          );
+
+        imageUrl = uploadedImage.imageUrl;
+        imageStoragePath =
+          uploadedImage.storagePath;
+
+        uploadedStoragePath =
+          uploadedImage.storagePath;
+      }
 
       const articleData = {
         title: formData.title.trim(),
         category: formData.category,
-        short_description: formData.short_description.trim(),
+        short_description:
+          formData.short_description.trim(),
         content: formData.content.trim(),
-        image_url: formData.image_url.trim() || null,
+        image_url: imageUrl,
+        image_storage_path: imageStoragePath,
       };
 
-      const article = await createArticle(articleData);
+      const article =
+        await createArticle(articleData);
 
       navigate(`/articles/${article.id}`);
     } catch (error) {
-      console.error("Failed to create article:", error);
+      console.error(
+        "Failed to create article:",
+        error
+      );
+
+      if (uploadedStoragePath) {
+        try {
+          await deleteArticleImage(
+            uploadedStoragePath
+          );
+        } catch (cleanupError) {
+          console.error(
+            "Failed to remove unused uploaded image:",
+            cleanupError
+          );
+        }
+      }
 
       setSubmitError(
-        error.message || "Unable to create article. Please try again."
+        error.message ||
+          "Unable to create the article. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -80,156 +197,30 @@ function CreateArticle() {
     <section className="form-page">
       <div className="form-container">
         <div className="form-card">
-          <h1 className="form-title">Create Article</h1>
+          <h1 className="form-title">
+            Create Article
+          </h1>
 
-          <form onSubmit={submitHandler} noValidate>
-            <div className="form-group">
-              <label htmlFor="title" className="form-label">
-                Title
-              </label>
-
-              <input
-                type="text"
-                id="title"
-                name="title"
-                className="form-input"
-                placeholder="Enter article title"
-                value={formData.title}
-                onChange={changeHandler}
-              />
-
-              {errors.title && (
-                <p className="form-error">
-                  {errors.title}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="category" className="form-label">
-                Category
-              </label>
-
-              <select
-                id="category"
-                name="category"
-                className="form-select"
-                value={formData.category}
-                onChange={changeHandler}
-              >
-                <option value="">
-                  Select a category
-                </option>
-
-                <option value="3D Printers">
-                  3D Printers
-                </option>
-
-                <option value="Filaments">
-                  Filaments
-                </option>
-
-                <option value="Print Settings">
-                  Print Settings
-                </option>
-
-                <option value="Projects">
-                  Projects
-                </option>
-              </select>
-
-              {errors.category && (
-                <p className="form-error">
-                  {errors.category}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label
-                htmlFor="short_description"
-                className="form-label"
-              >
-                Short Description
-              </label>
-
-              <textarea
-                id="short_description"
-                name="short_description"
-                className="form-textarea"
-                rows="4"
-                placeholder="Write a short description"
-                value={formData.short_description}
-                onChange={changeHandler}
-              />
-
-              {errors.short_description && (
-                <p className="form-error">
-                  {errors.short_description}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="content" className="form-label">
-                Content
-              </label>
-
-              <textarea
-                id="content"
-                name="content"
-                className="form-textarea"
-                rows="10"
-                placeholder="Write the article content"
-                value={formData.content}
-                onChange={changeHandler}
-              />
-
-              {errors.content && (
-                <p className="form-error">
-                  {errors.content}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="image_url" className="form-label">
-                Image URL
-              </label>
-
-              <input
-                type="text"
-                id="image_url"
-                name="image_url"
-                className="form-input"
-                placeholder="/images/articles/example.png"
-                value={formData.image_url}
-                onChange={changeHandler}
-              />
-
-              {errors.image_url && (
-                <p className="form-error">
-                  {errors.image_url}
-                </p>
-              )}
-            </div>
-
-            {submitError && (
-              <p className="form-error">
-                {submitError}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="form-submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting
-                ? "Creating..."
-                : "Create Article"}
-            </button>
-          </form>
+          <ArticleForm
+            formData={formData}
+            errors={errors}
+            imageSource={imageSource}
+            imageError={imageError}
+            submitError={submitError}
+            isSubmitting={isSubmitting}
+            onChange={changeHandler}
+            onImageSourceChange={
+              imageSourceChangeHandler
+            }
+            onImageFileChange={
+              imageFileChangeHandler
+            }
+            onSubmit={submitHandler}
+            fileInputRef={fileInputRef}
+            allowKeepCurrentImage={false}
+            submitLabel="Create Article"
+            submittingLabel="Creating..."
+          />
         </div>
       </div>
     </section>

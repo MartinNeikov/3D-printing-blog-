@@ -1,43 +1,69 @@
 export function validateRegister(data) {
   const errors = {};
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
 
   if (!data.name.trim()) {
     errors.name = "Name is required.";
   } else if (data.name.trim().length < 2) {
-    errors.name = "Name must be at least 2 characters.";
+    errors.name =
+      "Name must be at least 2 characters.";
   }
 
   if (!data.email.trim()) {
     errors.email = "Email is required.";
-  } else if (!emailPattern.test(data.email.trim())) {
-    errors.email = "Please enter a valid email address.";
+  } else if (
+    !emailPattern.test(data.email.trim())
+  ) {
+    errors.email =
+      "Please enter a valid email address.";
   }
 
   if (data.password.length < 6) {
-    errors.password = "Password must be at least 6 characters.";
+    errors.password =
+      "Password must be at least 6 characters.";
   }
 
-  if (data.password !== data.confirmPassword) {
-    errors.confirmPassword = "Passwords do not match.";
+  if (
+    data.password !== data.confirmPassword
+  ) {
+    errors.confirmPassword =
+      "Passwords do not match.";
   }
 
   return errors;
+}
+
+function isValidHttpUrl(value) {
+  try {
+    const url = new URL(value);
+
+    return (
+      url.protocol === "http:" ||
+      url.protocol === "https:"
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function validateArticle(data) {
   const errors = {};
 
   if (data.title.trim().length < 5) {
-    errors.title = "Title must be at least 5 characters.";
+    errors.title =
+      "Title must be at least 5 characters.";
   }
 
   if (!data.category) {
-    errors.category = "Please select a category.";
+    errors.category =
+      "Please select a category.";
   }
 
-  if (data.short_description.trim().length < 20) {
+  if (
+    data.short_description.trim().length < 20
+  ) {
     errors.short_description =
       "Short description must be at least 20 characters.";
   }
@@ -47,8 +73,13 @@ export function validateArticle(data) {
       "Article content must be at least 50 characters.";
   }
 
-  if (!data.image_url.trim()) {
+  const imageUrl = data.image_url.trim();
+
+  if (!imageUrl) {
     errors.image_url = "Image is required.";
+  } else if (!isValidHttpUrl(imageUrl)) {
+    errors.image_url =
+      "Please enter a valid http:// or https:// image URL.";
   }
 
   return errors;

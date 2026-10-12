@@ -1,18 +1,36 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  useNavigate,
+  useParams,
+} from "react-router";
 
 import {
   getArticleById,
   updateArticle,
 } from "../../services/articleService.js";
+
+import {
+  deleteArticleImage,
+  uploadArticleImage,
+} from "../../services/imageService.js";
+
 import { useAuth } from "../../hooks/useAuth.js";
 import { validateArticle } from "../../utils/validation.js";
+
+import ArticleForm from "../article-form/ArticleForm.jsx";
 
 function EditArticle() {
   const { articleId } = useParams();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   const { user } = useAuth();
+
+  const [article, setArticle] = useState(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -22,13 +40,32 @@ function EditArticle() {
     image_url: "",
   });
 
+  const [imageSource, setImageSource] =
+    useState("current");
+
+  const [imageFile, setImageFile] =
+    useState(null);
+
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [submitError, setSubmitError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [articleExists, setArticleExists] = useState(true);
-  const [isOwner, setIsOwner] = useState(true);
+  const [imageError, setImageError] =
+    useState("");
+  const [submitError, setSubmitError] =
+    useState("");
+
+  const [isLoading, setIsLoading] =
+    useState(true);
+
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
+
+  const [loadError, setLoadError] =
+    useState("");
+
+  const [articleExists, setArticleExists] =
+    useState(true);
+
+  const [isOwner, setIsOwner] =
+    useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -53,19 +90,27 @@ function EditArticle() {
           return;
         }
 
+        setArticle(data);
+
         setFormData({
           title: data.title ?? "",
           category: data.category ?? "",
-          short_description: data.short_description ?? "",
+          short_description:
+            data.short_description ?? "",
           content: data.content ?? "",
           image_url: data.image_url ?? "",
         });
+
+        setImageSource("current");
       } catch (error) {
         if (controller.signal.aborted) {
           return;
         }
 
-        console.error("Failed to load article:", error);
+        console.error(
+          "Failed to load article:",
+          error
+        );
 
         setLoadError(
           "Unable to load the article. Please try again later."
@@ -99,42 +144,199 @@ function EditArticle() {
       }));
     }
 
+    if (name === "image_url") {
+      setImageError("");
+    }
+
     if (submitError) {
       setSubmitError("");
     }
   }
 
+  function imageSourceChangeHandler(e) {
+    const selectedSource = e.target.value;
+
+    setImageSource(selectedSource);
+    setImageError("");
+    setSubmitError("");
+
+    setImageFile(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    if (selectedSource === "current") {
+      setFormData((state) => ({
+        ...state,
+        image_url: article.image_url ?? "",
+      }));
+
+      return;
+    }
+
+    if (selectedSource === "upload") {
+      setFormData((state) => ({
+        ...state,
+        image_url: "",
+      }));
+
+      return;
+    }
+
+    if (selectedSource === "url") {
+      setFormData((state) => ({
+        ...state,
+        image_url:
+          article.image_storage_path
+            ? ""
+            : article.image_url ?? "",
+      }));
+    }
+  }
+
+  function imageFileChangeHandler(e) {
+    const file = e.target.files[0] ?? null;
+
+    setImageFile(file);
+    setImageError("");
+    setSubmitError("");
+  }
+
   async function submitHandler(e) {
     e.preventDefault();
 
-    const validationErrors = validateArticle(formData);
+    const validationErrors =
+      validateArticle(formData);
 
-    if (Object.keys(validationErrors).length > 0) {
+    if (imageSource !== "url") {
+      delete validationErrors.image_url;
+    }
+
+    if (
+      Object.keys(validationErrors).length > 0
+    ) {
       setErrors(validationErrors);
       return;
     }
 
+    if (
+      imageSource === "url" &&
+      !formData.image_url.trim()
+    ) {
+      setImageError(
+        "Please provide an image URL."
+      );
+
+      return;
+    }
+
+    if (
+      imageSource === "upload" &&
+      !imageFile
+    ) {
+      setImageError(
+        "Please select an image to upload."
+      );
+
+      return;
+    }
+
+    let uploadedStoragePath = null;
+
     try {
       setErrors({});
+      setImageError("");
       setSubmitError("");
       setIsSubmitting(true);
+
+      let imageUrl = article.image_url;
+      let imageStoragePath =
+        article.image_storage_path;
+
+      if (imageSource === "url") {
+        imageUrl =
+          formData.image_url.trim();
+
+        imageStoragePath = null;
+      }
+
+      if (imageSource === "upload") {
+        const uploadedImage =
+          await uploadArticleImage(
+            imageFile,
+            user.id
+          );
+
+        imageUrl = uploadedImage.imageUrl;
+        imageStoragePath =
+          uploadedImage.storagePath;
+
+        uploadedStoragePath =
+          uploadedImage.storagePath;
+      }
 
       const articleData = {
         title: formData.title.trim(),
         category: formData.category,
-        short_description: formData.short_description.trim(),
+        short_description:
+          formData.short_description.trim(),
         content: formData.content.trim(),
-        image_url: formData.image_url.trim() || null,
+        image_url: imageUrl,
+        image_storage_path:
+          imageStoragePath,
       };
 
-      const article = await updateArticle(
-        articleId,
-        articleData
+      const updatedArticle =
+        await updateArticle(
+          articleId,
+          articleData
+        );
+
+      const oldStoragePath =
+        article.image_storage_path;
+
+      const imageWasReplaced =
+        imageSource !== "current";
+
+      if (
+        imageWasReplaced &&
+        oldStoragePath &&
+        oldStoragePath !== imageStoragePath
+      ) {
+        try {
+          await deleteArticleImage(
+            oldStoragePath
+          );
+        } catch (cleanupError) {
+          console.error(
+            "Failed to remove old article image:",
+            cleanupError
+          );
+        }
+      }
+
+      navigate(
+        `/articles/${updatedArticle.id}`
+      );
+    } catch (error) {
+      console.error(
+        "Failed to update article:",
+        error
       );
 
-      navigate(`/articles/${article.id}`);
-    } catch (error) {
-      console.error("Failed to update article:", error);
+      if (uploadedStoragePath) {
+        try {
+          await deleteArticleImage(
+            uploadedStoragePath
+          );
+        } catch (cleanupError) {
+          console.error(
+            "Failed to remove unused uploaded image:",
+            cleanupError
+          );
+        }
+      }
 
       setSubmitError(
         error.message ||
@@ -160,6 +362,7 @@ function EditArticle() {
       <section className="page-status">
         <div className="content-container">
           <h2>Unable to load article</h2>
+
           <p>{loadError}</p>
         </div>
       </section>
@@ -171,8 +374,10 @@ function EditArticle() {
       <section className="page-status">
         <div className="content-container">
           <h2>Article not found</h2>
+
           <p>
-            The article you are trying to edit does not exist.
+            The article you are trying to edit
+            does not exist.
           </p>
         </div>
       </section>
@@ -184,8 +389,10 @@ function EditArticle() {
       <section className="page-status">
         <div className="content-container">
           <h2>Access denied</h2>
+
           <p>
-            You can only edit articles that you created.
+            You can only edit articles that you
+            created.
           </p>
         </div>
       </section>
@@ -200,162 +407,26 @@ function EditArticle() {
             Edit Article
           </h1>
 
-          <form onSubmit={submitHandler} noValidate>
-            <div className="form-group">
-              <label
-                htmlFor="title"
-                className="form-label"
-              >
-                Title
-              </label>
-
-              <input
-                type="text"
-                id="title"
-                name="title"
-                className="form-input"
-                value={formData.title}
-                onChange={changeHandler}
-              />
-
-              {errors.title && (
-                <p className="form-error">
-                  {errors.title}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label
-                htmlFor="category"
-                className="form-label"
-              >
-                Category
-              </label>
-
-              <select
-                id="category"
-                name="category"
-                className="form-select"
-                value={formData.category}
-                onChange={changeHandler}
-              >
-                <option value="">
-                  Select a category
-                </option>
-
-                <option value="3D Printers">
-                  3D Printers
-                </option>
-
-                <option value="Filaments">
-                  Filaments
-                </option>
-
-                <option value="Print Settings">
-                  Print Settings
-                </option>
-
-                <option value="Projects">
-                  Projects
-                </option>
-              </select>
-
-              {errors.category && (
-                <p className="form-error">
-                  {errors.category}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label
-                htmlFor="short_description"
-                className="form-label"
-              >
-                Short Description
-              </label>
-
-              <textarea
-                id="short_description"
-                name="short_description"
-                className="form-textarea"
-                rows="4"
-                value={formData.short_description}
-                onChange={changeHandler}
-              />
-
-              {errors.short_description && (
-                <p className="form-error">
-                  {errors.short_description}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label
-                htmlFor="content"
-                className="form-label"
-              >
-                Content
-              </label>
-
-              <textarea
-                id="content"
-                name="content"
-                className="form-textarea"
-                rows="10"
-                value={formData.content}
-                onChange={changeHandler}
-              />
-
-              {errors.content && (
-                <p className="form-error">
-                  {errors.content}
-                </p>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label
-                htmlFor="image_url"
-                className="form-label"
-              >
-                Image URL
-              </label>
-
-              <input
-                type="text"
-                id="image_url"
-                name="image_url"
-                className="form-input"
-                value={formData.image_url}
-                onChange={changeHandler}
-              />
-
-              {errors.image_url && (
-                <p className="form-error">
-                  {errors.image_url}
-                </p>
-              )}
-            </div>
-
-            {submitError && (
-              <p className="form-error">
-                {submitError}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="form-submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting
-                ? "Saving..."
-                : "Save Changes"}
-            </button>
-          </form>
+          <ArticleForm
+            formData={formData}
+            errors={errors}
+            imageSource={imageSource}
+            imageError={imageError}
+            submitError={submitError}
+            isSubmitting={isSubmitting}
+            onChange={changeHandler}
+            onImageSourceChange={
+              imageSourceChangeHandler
+            }
+            onImageFileChange={
+              imageFileChangeHandler
+            }
+            onSubmit={submitHandler}
+            fileInputRef={fileInputRef}
+            allowKeepCurrentImage={true}
+            submitLabel="Save Changes"
+            submittingLabel="Saving..."
+          />
         </div>
       </div>
     </section>

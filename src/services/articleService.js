@@ -133,12 +133,22 @@ export async function updateArticle(articleId, articleData) {
 }
 
 export async function deleteArticle(articleId) {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("articles")
     .delete()
-    .eq("id", articleId);
+    .eq("id", articleId)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     throw error;
   }
+
+  if (!data) {
+    throw new Error(
+      "Article could not be deleted."
+    );
+  }
+
+  return data.id;
 }
