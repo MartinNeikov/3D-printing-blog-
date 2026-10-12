@@ -1,15 +1,29 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import {
+  Link,
+  useNavigate,
+  useParams,
+} from "react-router";
 
-import { getArticleById } from "../../services/articleService.js";
+import {
+  deleteArticle,
+  getArticleById,
+} from "../../services/articleService.js";
+import { useAuth } from "../../hooks/useAuth.js";
+
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 function ArticleDetails() {
   const { articleId } = useParams();
+  const navigate = useNavigate();
+
+  const { user, isAuthenticated } = useAuth();
 
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteError, setDeleteError] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -48,6 +62,38 @@ function ArticleDetails() {
       controller.abort();
     };
   }, [articleId]);
+
+  const isOwner =
+    isAuthenticated &&
+    article?.author_id === user?.id;
+
+  async function deleteHandler() {
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this article?"
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    try {
+      setDeleteError("");
+      setIsDeleting(true);
+
+      await deleteArticle(articleId);
+
+      navigate("/articles");
+    } catch (error) {
+      console.error("Failed to delete article:", error);
+
+      setDeleteError(
+        error.message ||
+          "Unable to delete the article. Please try again."
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -115,6 +161,34 @@ function ArticleDetails() {
                 ).toLocaleDateString()}
               </span>
             </div>
+
+            {isOwner && (
+              <div className="article-owner-actions">
+                <Link
+                  to={`/articles/${article.id}/edit`}
+                  className="article-edit-button"
+                >
+                  Edit
+                </Link>
+
+                <button
+                  type="button"
+                  className="article-delete-button"
+                  onClick={deleteHandler}
+                  disabled={isDeleting}
+                >
+                  {isDeleting
+                    ? "Deleting..."
+                    : "Delete"}
+                </button>
+              </div>
+            )}
+
+            {deleteError && (
+              <p className="form-error">
+                {deleteError}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -125,11 +199,13 @@ function ArticleDetails() {
             <div className="post-content-body">
               <p>{article.content}</p>
 
-              <img
-                src={article.image_url}
-                alt={article.title}
-                className="article-content-image"
-              />
+              {article.image_url && (
+                <img
+                  src={article.image_url}
+                  alt={article.title}
+                  className="article-content-image"
+                />
+              )}
             </div>
           </article>
 

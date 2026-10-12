@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-import { getArticleById } from "../../services/articleService.js";
+import {
+  getArticleById,
+  updateArticle,
+} from "../../services/articleService.js";
+import { useAuth } from "../../hooks/useAuth.js";
 import { validateArticle } from "../../utils/validation.js";
 
 function EditArticle() {
   const { articleId } = useParams();
+  const navigate = useNavigate();
+
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -18,7 +25,10 @@ function EditArticle() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [articleExists, setArticleExists] = useState(true);
+  const [isOwner, setIsOwner] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -28,10 +38,18 @@ function EditArticle() {
         setIsLoading(true);
         setLoadError("");
 
-        const data = await getArticleById(articleId, controller.signal);
-        
+        const data = await getArticleById(
+          articleId,
+          controller.signal
+        );
+
         if (!data) {
           setArticleExists(false);
+          return;
+        }
+
+        if (data.author_id !== user.id) {
+          setIsOwner(false);
           return;
         }
 
@@ -49,7 +67,9 @@ function EditArticle() {
 
         console.error("Failed to load article:", error);
 
-        setLoadError("Unable to load the article. Please try again later.");
+        setLoadError(
+          "Unable to load the article. Please try again later."
+        );
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -62,7 +82,7 @@ function EditArticle() {
     return () => {
       controller.abort();
     };
-  }, [articleId]);
+  }, [articleId, user.id]);
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -78,9 +98,13 @@ function EditArticle() {
         [name]: "",
       }));
     }
+
+    if (submitError) {
+      setSubmitError("");
+    }
   }
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
 
     const validationErrors = validateArticle(formData);
@@ -90,9 +114,35 @@ function EditArticle() {
       return;
     }
 
-    setErrors({});
+    try {
+      setErrors({});
+      setSubmitError("");
+      setIsSubmitting(true);
 
-    // Supabase UPDATE will be added after Authentication.
+      const articleData = {
+        title: formData.title.trim(),
+        category: formData.category,
+        short_description: formData.short_description.trim(),
+        content: formData.content.trim(),
+        image_url: formData.image_url.trim() || null,
+      };
+
+      const article = await updateArticle(
+        articleId,
+        articleData
+      );
+
+      navigate(`/articles/${article.id}`);
+    } catch (error) {
+      console.error("Failed to update article:", error);
+
+      setSubmitError(
+        error.message ||
+          "Unable to update the article. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (isLoading) {
@@ -121,7 +171,22 @@ function EditArticle() {
       <section className="page-status">
         <div className="content-container">
           <h2>Article not found</h2>
-          <p>The article you are trying to edit does not exist.</p>
+          <p>
+            The article you are trying to edit does not exist.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!isOwner) {
+    return (
+      <section className="page-status">
+        <div className="content-container">
+          <h2>Access denied</h2>
+          <p>
+            You can only edit articles that you created.
+          </p>
         </div>
       </section>
     );
@@ -131,11 +196,16 @@ function EditArticle() {
     <section className="form-page">
       <div className="form-container">
         <div className="form-card">
-          <h1 className="form-title">Edit Article</h1>
+          <h1 className="form-title">
+            Edit Article
+          </h1>
 
           <form onSubmit={submitHandler} noValidate>
             <div className="form-group">
-              <label htmlFor="title" className="form-label">
+              <label
+                htmlFor="title"
+                className="form-label"
+              >
                 Title
               </label>
 
@@ -148,11 +218,18 @@ function EditArticle() {
                 onChange={changeHandler}
               />
 
-              {errors.title && <p className="form-error">{errors.title}</p>}
+              {errors.title && (
+                <p className="form-error">
+                  {errors.title}
+                </p>
+              )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="category" className="form-label">
+              <label
+                htmlFor="category"
+                className="form-label"
+              >
                 Category
               </label>
 
@@ -163,20 +240,39 @@ function EditArticle() {
                 value={formData.category}
                 onChange={changeHandler}
               >
-                <option value="">Select a category</option>
-                <option value="3D Printers">3D Printers</option>
-                <option value="Filaments">Filaments</option>
-                <option value="Print Settings">Print Settings</option>
-                <option value="Projects">Projects</option>
+                <option value="">
+                  Select a category
+                </option>
+
+                <option value="3D Printers">
+                  3D Printers
+                </option>
+
+                <option value="Filaments">
+                  Filaments
+                </option>
+
+                <option value="Print Settings">
+                  Print Settings
+                </option>
+
+                <option value="Projects">
+                  Projects
+                </option>
               </select>
 
               {errors.category && (
-                <p className="form-error">{errors.category}</p>
+                <p className="form-error">
+                  {errors.category}
+                </p>
               )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="short_description" className="form-label">
+              <label
+                htmlFor="short_description"
+                className="form-label"
+              >
                 Short Description
               </label>
 
@@ -190,12 +286,17 @@ function EditArticle() {
               />
 
               {errors.short_description && (
-                <p className="form-error">{errors.short_description}</p>
+                <p className="form-error">
+                  {errors.short_description}
+                </p>
               )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="content" className="form-label">
+              <label
+                htmlFor="content"
+                className="form-label"
+              >
                 Content
               </label>
 
@@ -208,11 +309,18 @@ function EditArticle() {
                 onChange={changeHandler}
               />
 
-              {errors.content && <p className="form-error">{errors.content}</p>}
+              {errors.content && (
+                <p className="form-error">
+                  {errors.content}
+                </p>
+              )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="image_url" className="form-label">
+              <label
+                htmlFor="image_url"
+                className="form-label"
+              >
                 Image URL
               </label>
 
@@ -226,12 +334,26 @@ function EditArticle() {
               />
 
               {errors.image_url && (
-                <p className="form-error">{errors.image_url}</p>
+                <p className="form-error">
+                  {errors.image_url}
+                </p>
               )}
             </div>
 
-            <button type="submit" className="form-submit">
-              Save Changes
+            {submitError && (
+              <p className="form-error">
+                {submitError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="form-submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? "Saving..."
+                : "Save Changes"}
             </button>
           </form>
         </div>

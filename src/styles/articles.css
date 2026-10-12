@@ -145,12 +145,10 @@
 
   z-index: 1;
 
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    transparent 18%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      transparent 18%,
+      rgba(0, 0, 0, 0.8) 100%);
 }
 
 .retro-layout .text {
@@ -547,6 +545,59 @@
   color: #fff;
 }
 
+/* ==================================================
+   Article Owner Actions
+================================================== */
+
+.article-owner-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+.article-edit-button,
+.article-delete-button {
+  padding: 9px 18px;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  border-radius: 4px;
+
+  cursor: pointer;
+}
+
+.article-edit-button {
+  color: #214252;
+  background-color: #fff;
+
+  border: 1px solid #fff;
+  text-decoration: none;
+}
+
+.article-delete-button {
+  color: #fff;
+  background-color: #b42318;
+
+  border: 1px solid #b42318;
+}
+
+.article-edit-button:hover {
+  background-color: #f1f3f5;
+}
+
+.article-delete-button:hover {
+  background-color: #8f1c13;
+}
+
+.article-delete-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
 
 /* ==================================================
    Article Details Layout
@@ -572,21 +623,26 @@
 .post-content-body {
   font-size: 16px;
   line-height: 1.8;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .post-content-body p {
   margin-bottom: 24px;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .article-content-image {
   display: block;
 
   width: 100%;
-  max-height: 600px;
+
 
   margin-top: 30px;
 
-  object-fit: cover;
 
   border-radius: 10px;
 }

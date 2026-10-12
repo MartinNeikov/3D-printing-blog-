@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
+import { createArticle } from "../../services/articleService.js";
 import { validateArticle } from "../../utils/validation.js";
 
 function CreateArticle() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -12,6 +16,8 @@ function CreateArticle() {
   });
 
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -27,9 +33,13 @@ function CreateArticle() {
         [name]: "",
       }));
     }
+
+    if (submitError) {
+      setSubmitError("");
+    }
   }
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
 
     const validationErrors = validateArticle(formData);
@@ -39,25 +49,42 @@ function CreateArticle() {
       return;
     }
 
-    setErrors({});
+    try {
+      setErrors({});
+      setSubmitError("");
+      setIsSubmitting(true);
 
-    // Supabase INSERT will be added after Authentication.
+      const articleData = {
+        title: formData.title.trim(),
+        category: formData.category,
+        short_description: formData.short_description.trim(),
+        content: formData.content.trim(),
+        image_url: formData.image_url.trim() || null,
+      };
+
+      const article = await createArticle(articleData);
+
+      navigate(`/articles/${article.id}`);
+    } catch (error) {
+      console.error("Failed to create article:", error);
+
+      setSubmitError(
+        error.message || "Unable to create article. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <section className="form-page">
       <div className="form-container">
         <div className="form-card">
-          <h1 className="form-title">
-            Create Article
-          </h1>
+          <h1 className="form-title">Create Article</h1>
 
           <form onSubmit={submitHandler} noValidate>
             <div className="form-group">
-              <label
-                htmlFor="title"
-                className="form-label"
-              >
+              <label htmlFor="title" className="form-label">
                 Title
               </label>
 
@@ -79,10 +106,7 @@ function CreateArticle() {
             </div>
 
             <div className="form-group">
-              <label
-                htmlFor="category"
-                className="form-label"
-              >
+              <label htmlFor="category" className="form-label">
                 Category
               </label>
 
@@ -147,10 +171,7 @@ function CreateArticle() {
             </div>
 
             <div className="form-group">
-              <label
-                htmlFor="content"
-                className="form-label"
-              >
+              <label htmlFor="content" className="form-label">
                 Content
               </label>
 
@@ -172,10 +193,7 @@ function CreateArticle() {
             </div>
 
             <div className="form-group">
-              <label
-                htmlFor="image_url"
-                className="form-label"
-              >
+              <label htmlFor="image_url" className="form-label">
                 Image URL
               </label>
 
@@ -196,11 +214,20 @@ function CreateArticle() {
               )}
             </div>
 
+            {submitError && (
+              <p className="form-error">
+                {submitError}
+              </p>
+            )}
+
             <button
               type="submit"
               className="form-submit"
+              disabled={isSubmitting}
             >
-              Create Article
+              {isSubmitting
+                ? "Creating..."
+                : "Create Article"}
             </button>
           </form>
         </div>
