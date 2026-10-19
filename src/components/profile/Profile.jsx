@@ -11,11 +11,7 @@ import {
 
 const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
 
-const ALLOWED_AVATAR_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-];
+const ALLOWED_AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 function Profile() {
   const { user } = useAuth();
@@ -58,9 +54,7 @@ function Profile() {
 
         console.error("Failed to load profile:", error);
 
-        setError(
-          "Unable to load your profile. Please try again later."
-        );
+        setError("Unable to load your profile. Please try again later.");
       } finally {
         if (!ignore) {
           setIsLoading(false);
@@ -87,9 +81,7 @@ function Profile() {
     }
 
     if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
-      setError(
-        "Avatar must be a JPEG, PNG or WebP image."
-      );
+      setError("Avatar must be a JPEG, PNG or WebP image.");
 
       e.target.value = "";
       return;
@@ -123,10 +115,7 @@ function Profile() {
       let newAvatar = null;
 
       if (avatarFile) {
-        newAvatar = await uploadAvatar(
-          user.id,
-          avatarFile
-        );
+        newAvatar = await uploadAvatar(user.id, avatarFile);
       }
 
       const profileData = {
@@ -141,10 +130,7 @@ function Profile() {
       let updatedProfile;
 
       try {
-        updatedProfile = await updateProfile(
-          user.id,
-          profileData
-        );
+        updatedProfile = await updateProfile(user.id, profileData);
       } catch (error) {
         if (newAvatar?.avatarPath) {
           await deleteAvatar(newAvatar.avatarPath);
@@ -165,15 +151,12 @@ function Profile() {
       setName(updatedProfile.name);
       setAvatarFile(null);
 
-      setSuccessMessage(
-        "Profile updated successfully."
-      );
+      setSuccessMessage("Profile updated successfully.");
     } catch (error) {
       console.error("Failed to update profile:", error);
 
       setError(
-        error.message ||
-          "Unable to update your profile. Please try again."
+        error.message || "Unable to update your profile. Please try again.",
       );
     } finally {
       setIsSaving(false);
@@ -196,26 +179,19 @@ function Profile() {
         <div className="form-container-small">
           <h1>Unable to load profile</h1>
 
-          {error && (
-            <p className="form-error">
-              {error}
-            </p>
-          )}
+          {error && <p className="form-error">{error}</p>}
         </div>
       </section>
     );
   }
 
-  const profileInitial =
-    profile.name?.trim().charAt(0).toUpperCase() || "U";
+  const profileInitial = profile.name?.trim().charAt(0).toUpperCase() || "U";
 
   return (
     <section className="form-page">
       <div className="form-container-small">
         <div className="form-card">
-          <h1 className="form-title">
-            My Profile
-          </h1>
+          <h1 className="form-title">My Profile</h1>
 
           <div className="profile-avatar-wrapper">
             {profile.avatar_url ? (
@@ -234,15 +210,9 @@ function Profile() {
             )}
           </div>
 
-          <form
-            onSubmit={submitHandler}
-            noValidate
-          >
+          <form onSubmit={submitHandler} noValidate>
             <div className="form-group">
-              <label
-                htmlFor="name"
-                className="form-label"
-              >
+              <label htmlFor="name" className="form-label">
                 Name
               </label>
 
@@ -258,29 +228,26 @@ function Profile() {
                 }}
               />
             </div>
-
             <div className="form-group">
-              <label
-                htmlFor="email"
-                className="form-label"
-              >
+              <label htmlFor="email" className="form-label">
                 Email
               </label>
 
               <input
                 type="email"
                 id="email"
-                className="form-input"
-                value={user.email ?? ""}
-                readOnly
+                value={user.email || ""}
+                disabled
+                className="form-input profile-input-disabled"
               />
+
+              <small className="profile-field-hint">
+                Email cannot be changed.
+              </small>
             </div>
 
             <div className="form-group">
-              <label
-                htmlFor="avatar"
-                className="form-label"
-              >
+              <label htmlFor="avatar" className="form-label">
                 Change Avatar
               </label>
 
@@ -292,33 +259,15 @@ function Profile() {
                 onChange={avatarChangeHandler}
               />
 
-              {avatarFile && (
-                <p>
-                  Selected: {avatarFile.name}
-                </p>
-              )}
+              {avatarFile && <p>Selected: {avatarFile.name}</p>}
             </div>
 
-            {error && (
-              <p className="form-error">
-                {error}
-              </p>
-            )}
+            {error && <p className="form-error">{error}</p>}
 
-            {successMessage && (
-              <p className="form-success">
-                {successMessage}
-              </p>
-            )}
+            {successMessage && <p className="form-success">{successMessage}</p>}
 
-            <button
-              type="submit"
-              className="form-submit"
-              disabled={isSaving}
-            >
-              {isSaving
-                ? "Saving..."
-                : "Save Profile"}
+            <button type="submit" className="form-submit" disabled={isSaving}>
+              {isSaving ? "Saving..." : "Save Profile"}
             </button>
           </form>
         </div>
