@@ -5,8 +5,9 @@ import {
   deleteArticle,
   getArticleById,
 } from "../../services/articleService.js";
-import { useAuth } from "../../hooks/useAuth.js";
 
+import { getProfile } from "../../services/profileService.js";
+import { useAuth } from "../../hooks/useAuth.js";
 import { deleteArticleImage } from "../../services/imageService.js";
 
 import Sidebar from "../sidebar/Sidebar.jsx";
@@ -18,6 +19,8 @@ function ArticleDetails() {
   const { user, isAuthenticated } = useAuth();
 
   const [article, setArticle] = useState(null);
+  const [authorProfile, setAuthorProfile] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleteError, setDeleteError] = useState("");
@@ -30,10 +33,27 @@ function ArticleDetails() {
       try {
         setIsLoading(true);
         setError(null);
+        setAuthorProfile(null);
 
         const data = await getArticleById(articleId, controller.signal);
 
+        if (controller.signal.aborted) {
+          return;
+        }
+
         setArticle(data);
+
+        if (data?.author_id) {
+          try {
+            const profileData = await getProfile(data.author_id);
+
+            if (!controller.signal.aborted) {
+              setAuthorProfile(profileData);
+            }
+          } catch (profileError) {
+            console.error("Failed to load author profile:", profileError);
+          }
+        }
       } catch (error) {
         if (controller.signal.aborted) {
           return;
@@ -128,6 +148,10 @@ function ArticleDetails() {
     );
   }
 
+  const authorName = authorProfile?.name || "Unknown author";
+
+  const authorInitial = authorName.charAt(0).toUpperCase();
+
   return (
     <>
       <section
@@ -142,15 +166,32 @@ function ArticleDetails() {
 
             <div className="post-meta">
               <figure className="author-figure">
-                <img src="/images/authors/Martin.png" alt="Author" />
+                {authorProfile?.avatar_url ? (
+                  <img
+                    src={authorProfile.avatar_url}
+                    alt={`${authorName} avatar`}
+                  />
+                ) : (
+                  <span className="article-author-fallback">
+                    {authorInitial}
+                  </span>
+                )}
               </figure>
 
-              <span>By Martin</span>
+              <span>By {authorName}</span>
 
               <span>
                 {" • "}
-                {new Date(article.created_at).toLocaleDateString()}
+                Published {new Date(article.created_at).toLocaleDateString()}
               </span>
+
+              {article.updated_at &&
+                article.updated_at !== article.created_at && (
+                  <span>
+                    {" • "}
+                    Updated {new Date(article.updated_at).toLocaleDateString()}
+                  </span>
+                )}
             </div>
 
             {isOwner && (

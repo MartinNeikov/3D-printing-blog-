@@ -13,6 +13,7 @@ import Search from "./components/search/Search.jsx";
 import NotFound from "./components/not-found/NotFound.jsx";
 import PrivateRoute from "./components/route-guards/PrivateRoute.jsx";
 import GuestRoute from "./components/route-guards/GuestRoute.jsx";
+import Profile from "./components/profile/Profile.jsx";
 
 function App() {
   return (
@@ -43,6 +44,12 @@ function App() {
           <Route
             path="articles/:articleId/edit"
             element={<EditArticle />}
+          />
+        
+
+          <Route
+            path="profile"
+            element={<Profile />}
           />
         </Route>
 

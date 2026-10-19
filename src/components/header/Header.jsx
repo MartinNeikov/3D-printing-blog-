@@ -6,11 +6,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 function Header() {
   const navigate = useNavigate();
 
-  const {
-    isAuthenticated,
-    isLoading,
-    logout,
-  } = useAuth();
+  const { isAuthenticated, isLoading, logout } = useAuth();
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -49,9 +45,7 @@ function Header() {
             <NavLink
               to="/"
               end
-              className={({ isActive }) =>
-                isActive ? "active" : ""
-              }
+              className={({ isActive }) => (isActive ? "active" : "")}
             >
               Home
             </NavLink>
@@ -60,24 +54,18 @@ function Header() {
           <li className="has-children">
             <NavLink
               to="/articles"
-              className={({ isActive }) =>
-                isActive ? "active" : ""
-              }
+              className={({ isActive }) => (isActive ? "active" : "")}
             >
               Articles
             </NavLink>
 
             <ul className="dropdown">
               <li>
-                <NavLink to="/categories/3d-printers">
-                  3D Printers
-                </NavLink>
+                <NavLink to="/categories/3d-printers">3D Printers</NavLink>
               </li>
 
               <li>
-                <NavLink to="/categories/filaments">
-                  Filaments
-                </NavLink>
+                <NavLink to="/categories/filaments">Filaments</NavLink>
               </li>
 
               <li>
@@ -87,16 +75,12 @@ function Header() {
               </li>
 
               <li>
-                <NavLink to="/categories/projects">
-                  Projects
-                </NavLink>
+                <NavLink to="/categories/projects">Projects</NavLink>
               </li>
 
               {!isLoading && isAuthenticated && (
                 <li>
-                  <NavLink to="/articles/create">
-                    Create Article
-                  </NavLink>
+                  <NavLink to="/articles/create">Create Article</NavLink>
                 </li>
               )}
             </ul>
@@ -107,9 +91,7 @@ function Header() {
               <li>
                 <NavLink
                   to="/login"
-                  className={({ isActive }) =>
-                    isActive ? "active" : ""
-                  }
+                  className={({ isActive }) => (isActive ? "active" : "")}
                 >
                   Login
                 </NavLink>
@@ -118,9 +100,7 @@ function Header() {
               <li>
                 <NavLink
                   to="/register"
-                  className={({ isActive }) =>
-                    isActive ? "active" : ""
-                  }
+                  className={({ isActive }) => (isActive ? "active" : "")}
                 >
                   Register
                 </NavLink>
@@ -129,41 +109,40 @@ function Header() {
           )}
 
           {!isLoading && isAuthenticated && (
-            <li>
-              <button
-                type="button"
-                className="header-logout"
-                onClick={logoutHandler}
-              >
-                Logout
-              </button>
-            </li>
+            <>
+              <li>
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) => (isActive ? "active" : "")}
+                >
+                  Profile
+                </NavLink>
+              </li>
+
+              <li>
+                <button
+                  type="button"
+                  className="header-logout"
+                  onClick={logoutHandler}
+                >
+                  Logout
+                </button>
+              </li>
+            </>
           )}
         </ul>
 
-        <form
-          onSubmit={searchSubmitHandler}
-          className="header-search"
-        >
+        <form onSubmit={searchSubmitHandler} className="header-search">
           <input
             type="search"
             className="header-search-input"
             placeholder="Search..."
             value={searchValue}
-            onChange={(e) =>
-              setSearchValue(e.target.value)
-            }
+            onChange={(e) => setSearchValue(e.target.value)}
           />
 
-          <button
-            type="submit"
-            className="search-submit"
-            aria-label="Search"
-          >
-            <span
-              className="search-icon"
-              aria-hidden="true"
-            />
+          <button type="submit" className="search-submit" aria-label="Search">
+            <span className="search-icon" aria-hidden="true" />
           </button>
         </form>
       </div>
