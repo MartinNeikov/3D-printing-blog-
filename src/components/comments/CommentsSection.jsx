@@ -32,10 +32,7 @@ function CommentsSection({ articleId }) {
         setIsLoading(true);
         setError("");
 
-        const data = await getCommentsByArticleId(
-          articleId,
-          controller.signal,
-        );
+        const data = await getCommentsByArticleId(articleId, controller.signal);
 
         if (controller.signal.aborted) {
           return;
@@ -49,9 +46,7 @@ function CommentsSection({ articleId }) {
 
         console.error("Failed to load comments:", error);
 
-        setError(
-          "Unable to load comments. Please try again later.",
-        );
+        setError("Unable to load comments. Please try again later.");
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -77,9 +72,7 @@ function CommentsSection({ articleId }) {
     }
 
     if (trimmedComment.length > 1000) {
-      setSubmitError(
-        "Comment cannot be longer than 1000 characters.",
-      );
+      setSubmitError("Comment cannot be longer than 1000 characters.");
       return;
     }
 
@@ -93,18 +86,14 @@ function CommentsSection({ articleId }) {
         content: trimmedComment,
       });
 
-      setComments((currentComments) => [
-        ...currentComments,
-        newComment,
-      ]);
+      setComments((currentComments) => [...currentComments, newComment]);
 
       setCommentText("");
     } catch (error) {
       console.error("Failed to create comment:", error);
 
       setSubmitError(
-        error.message ||
-          "Unable to post your comment. Please try again.",
+        error.message || "Unable to post your comment. Please try again.",
       );
     } finally {
       setIsPosting(false);
@@ -127,16 +116,13 @@ function CommentsSection({ articleId }) {
       await deleteComment(commentId);
 
       setComments((currentComments) =>
-        currentComments.filter(
-          (comment) => comment.id !== commentId,
-        ),
+        currentComments.filter((comment) => comment.id !== commentId),
       );
     } catch (error) {
       console.error("Failed to delete comment:", error);
 
       setDeleteError(
-        error.message ||
-          "Unable to delete the comment. Please try again.",
+        error.message || "Unable to delete the comment. Please try again.",
       );
     } finally {
       setDeletingCommentId(null);
@@ -145,20 +131,11 @@ function CommentsSection({ articleId }) {
 
   return (
     <section className="comments-section">
-      <h2 className="comments-title">
-        Comments ({comments.length})
-      </h2>
+      <h2 className="comments-title">Comments ({comments.length})</h2>
 
       {isAuthenticated ? (
-        <form
-          className="comment-form"
-          onSubmit={submitHandler}
-          noValidate
-        >
-          <label
-            htmlFor="comment"
-            className="form-label"
-          >
+        <form className="comment-form" onSubmit={submitHandler} noValidate>
+          <label htmlFor="comment" className="form-label">
             Leave a comment
           </label>
 
@@ -176,83 +153,49 @@ function CommentsSection({ articleId }) {
           />
 
           <div className="comment-form-footer">
-            <small>
-              {commentText.length}/1000
-            </small>
+            <small>{commentText.length}/1000</small>
 
             <button
               type="submit"
               className="form-submit comment-submit-button"
               disabled={isPosting}
             >
-              {isPosting
-                ? "Posting..."
-                : "Post Comment"}
+              {isPosting ? "Posting..." : "Post Comment"}
             </button>
           </div>
 
-          {submitError && (
-            <p className="form-error">
-              {submitError}
-            </p>
-          )}
+          {submitError && <p className="form-error">{submitError}</p>}
         </form>
       ) : (
         <p className="comment-login-message">
-          Please{" "}
-          <Link to="/login">log in</Link>{" "}
-          to leave a comment.
+          Please <Link to="/login">log in</Link> to leave a comment.
         </p>
       )}
 
-      {deleteError && (
-        <p className="form-error">
-          {deleteError}
-        </p>
-      )}
+      {deleteError && <p className="form-error">{deleteError}</p>}
 
-      {isLoading && (
-        <p>Loading comments...</p>
-      )}
+      {isLoading && <p>Loading comments...</p>}
 
-      {error && (
-        <p className="form-error">
-          {error}
-        </p>
-      )}
+      {error && <p className="form-error">{error}</p>}
 
-      {!isLoading &&
-        !error &&
-        comments.length === 0 && (
-          <p>No comments yet.</p>
-        )}
+      {!isLoading && !error && comments.length === 0 && <p>No comments yet.</p>}
 
       {!isLoading &&
         !error &&
         comments.map((comment) => {
-          const authorName =
-            comment.author?.name ||
-            "Unknown user";
+          const authorName = comment.author?.name || "Unknown user";
 
-          const authorInitial = authorName
-            .charAt(0)
-            .toUpperCase();
+          const authorInitial = authorName.charAt(0).toUpperCase();
 
           const isCommentOwner =
-            isAuthenticated &&
-            comment.author_id === user?.id;
+            isAuthenticated && comment.author_id === user?.id;
 
           return (
-            <article
-              key={comment.id}
-              className="comment-card"
-            >
+            <article key={comment.id} className="comment-card">
               <div className="comment-author">
                 {comment.author?.avatar_url ? (
                   <img
-                    src={
-                      comment.author.avatar_url
-                    }
+                    src={comment.author.avatar_url}
                     alt={`${authorName} avatar`}
                     className="comment-avatar"
                   />
@@ -263,37 +206,25 @@ function CommentsSection({ articleId }) {
                 )}
 
                 <div>
-                  <strong>
-                    {authorName}
-                  </strong>
+                  <strong>{authorName}</strong>
 
                   <p className="comment-date">
-                    {new Date(
-                      comment.created_at,
-                    ).toLocaleString()}
+                    {new Date(comment.created_at).toLocaleString()}
                   </p>
                 </div>
               </div>
 
-              <p className="comment-content">
-                {comment.content}
-              </p>
+              <p className="comment-content">{comment.content}</p>
 
               {isCommentOwner && (
                 <button
                   type="button"
                   className="comment-delete-button"
-                  onClick={() =>
-                    deleteHandler(comment.id)
-                  }
-                  disabled={
-                    deletingCommentId === comment.id
-                  }
-                >
-                  {deletingCommentId === comment.id
-                    ? "Deleting..."
-                    : "Delete"}
-                </button>
+                  onClick={() => deleteHandler(comment.id)}
+                  disabled={deletingCommentId === comment.id}
+                  aria-label="Delete comment"
+                  title="Delete comment"
+                />
               )}
             </article>
           );

@@ -761,20 +761,32 @@
 
 .comment-delete-button {
   margin-top: 8px;
-  padding: 4px 10px;
+  padding: 4px;
   border: none;
   background: transparent;
-  font-size: 13px;
+  color: #140000;
   cursor: pointer;
-  opacity: 0.7;
+  opacity: 0.8;
+  font-size: 25px;
+  line-height: 1;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.comment-delete-button::before {
+  content: "🗑";
 }
 
 .comment-delete-button:hover {
+  color: #c0392b;
   opacity: 1;
-  text-decoration: underline;
+  transform: scale(1.1);
 }
 
 .comment-delete-button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.4;
+  transform: none;
 }
