@@ -13,6 +13,10 @@ import { deleteArticleImage } from "../../services/imageService.js";
 import Sidebar from "../sidebar/Sidebar.jsx";
 import CommentsSection from "../comments/CommentsSection.jsx";
 import ArticleFeedback from "../article-feedback/ArticleFeedback.jsx";
+import NotFound from "../not-found/NotFound.jsx";
+
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function ArticleDetails() {
   const { articleId } = useParams();
@@ -35,7 +39,12 @@ function ArticleDetails() {
       try {
         setIsLoading(true);
         setError(null);
+        setArticle(null);
         setAuthorProfile(null);
+
+        if (!UUID_REGEX.test(articleId)) {
+          return;
+        }
 
         const data = await getArticleById(
           articleId,
@@ -145,6 +154,7 @@ function ArticleDetails() {
       <section className="page-status">
         <div className="content-container">
           <h2>Unable to load article</h2>
+
           <p>{error}</p>
         </div>
       </section>
@@ -152,16 +162,7 @@ function ArticleDetails() {
   }
 
   if (!article) {
-    return (
-      <section className="page-status">
-        <div className="content-container">
-          <h2>Article not found</h2>
-          <p>
-            The article you are looking for does not exist.
-          </p>
-        </div>
-      </section>
-    );
+    return <NotFound />;
   }
 
   const authorName =

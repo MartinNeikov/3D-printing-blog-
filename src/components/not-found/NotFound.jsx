@@ -2,17 +2,17 @@ import { Link } from "react-router";
 
 function NotFound() {
   return (
-    <section className="page-status">
-      <div className="content-container">
-        <h1>404</h1>
+    <section className="page-status not-found-page">
+      <div className="content-container not-found-content">
+        <h1 className="not-found-code">404</h1>
 
-        <h2>Page Not Found</h2>
+        <h2 className="not-found-title">Layer Not Found</h2>
 
-        <p>
-          The page you are looking for does not exist.
+        <p className="not-found-message">
+          ⚠️ Layer shift detected somewhere around this URL.
         </p>
 
-        <Link to="/" className="read-more">
+        <Link to="/" className="not-found-button">
           Back to Home
         </Link>
       </div>
