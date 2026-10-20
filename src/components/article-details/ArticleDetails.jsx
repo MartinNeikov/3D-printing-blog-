@@ -12,6 +12,7 @@ import { deleteArticleImage } from "../../services/imageService.js";
 
 import Sidebar from "../sidebar/Sidebar.jsx";
 import CommentsSection from "../comments/CommentsSection.jsx";
+import ArticleFeedback from "../article-feedback/ArticleFeedback.jsx";
 
 function ArticleDetails() {
   const { articleId } = useParams();
@@ -268,9 +269,9 @@ function ArticleDetails() {
               )}
             </div>
 
-            <CommentsSection
-              articleId={article.id}
-            />
+            <ArticleFeedback articleId={article.id} />
+
+            <CommentsSection articleId={article.id} />
           </article>
 
           <Sidebar />

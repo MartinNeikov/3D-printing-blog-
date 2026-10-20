@@ -790,3 +790,63 @@
   opacity: 0.4;
   transform: none;
 }
+
+/* ==================================================
+   Article Feedback
+================================================== */
+
+.article-feedback {
+  margin-top: 35px;
+  padding: 20px 0;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.article-feedback h3 {
+  margin-bottom: 15px;
+}
+
+.article-feedback-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.feedback-button {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.feedback-useful::before {
+  content: "👍";
+  margin-right: 6px;
+}
+
+.feedback-not-useful::before {
+  content: "👎";
+  margin-right: 6px;
+} 
+
+.feedback-button:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.feedback-button-active {
+  border-color: #333;
+  background: #f0f0f0;
+  font-weight: 600;
+}
+
+.feedback-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.feedback-login-message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #777;
+}
