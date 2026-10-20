@@ -1,277 +1,209 @@
 # PrintForge
 
-> React project developed for the **SoftUni ReactJS Regular Exam 2026**.
+PrintForge is my React project for the SoftUni ReactJS Regular Exam 2026.
 
-PrintForge is a community-oriented blog focused on **3D printing**, including topics such as:
+The project is a blog about 3D printing. Users can browse articles about printers, filaments, print settings and projects. Registered users can also create their own articles, comment on articles and rate them as useful or not useful.
 
-- 3D printers
-- Filaments
-- Print settings
-- Projects
-- Troubleshooting
-- Guides
-- Reviews
+## Live Demo
 
----
+https://printforge-xi-eight.vercel.app/
 
-## 📌 Current Project Status
+## GitHub Repository
 
-The project currently has its **main application structure, authentication, article CRUD, ownership rules, and Supabase Storage integration implemented**.
+https://github.com/MartinNeikov/3D-printing-blog-
 
-### ✅ Implemented so far
+## Technologies
 
-- React project created with **Vite**
-- **ESLint** configured
-- Blogy HTML template converted to **JSX**
-- Custom CSS structure created without Bootstrap
-- Reusable `Header` and `Footer` components
-- Reusable article cards and section components
-- Shared `ArticleForm` used by Create and Edit pages
-- Client-side routing with **React Router**
-- Public Catalog and Article Details pages
-- Category filtering
-- Search functionality
-- Custom Not Found route
-- User registration with **Supabase Authentication**
-- User login and logout
-- Persistent authentication session
-- Authentication state shared through **Context API**
-- Private route guard for authenticated-only pages
-- Guest route guard for Login and Register
-- Remote article data stored in **Supabase PostgreSQL**
-- Full article CRUD functionality
-- Article ownership through `author_id`
-- Owner-only Edit and Delete actions
-- Supabase **Row Level Security (RLS)** policies for article ownership
-- Article image support through either:
-  - external image URL
-  - local image upload
-- Article images stored in **Supabase Storage**
-- Uploaded image cleanup when an article image is replaced
-- Uploaded image cleanup when an article is deleted
-- Image file type and file size restrictions
-- Form validation and visible error states
-- Loading states for remote data
-- Production build tested successfully
+- React
+- JavaScript
+- React Router
+- Vite
+- Supabase
+- PostgreSQL
+- Supabase Authentication
+- Supabase Storage
+- Supabase Row Level Security
+- CSS
+- ESLint
 
-### 🚧 Still to be implemented
+## Main Features
 
+- Public article catalog
+- Article details page
+- Article categories
+- Article search
+- User registration
+- Login and logout
+- Persistent user session
+- Create article
+- Edit own article
+- Delete own article
+- Article image upload
+- External article image URL
+- User profile
+- Display name and avatar
 - Comments
-- Likes / Unlike functionality
-- User profiles
-- User display names and avatars from profile data
-- Supabase Storage for profile avatars
-- Final custom 404 design
-- Final architecture documentation
-- Final production deployment and deployment URL
-- Final README review before submission
+- Delete own comments
+- Useful / Not useful article feedback
+- Custom 404 page
+- Protected routes
+- Guest-only routes
+- Supabase Row Level Security
 
----
+## Project Structure
 
-## 🧩 Current Project Structure
+The project is separated into components, services, context, hooks and CSS files.
 
 ```text
 src/
 ├── components/
-│   ├── app-layout/
-│   │   └── AppLayout.jsx
-│   ├── article-details/
-│   │   └── ArticleDetails.jsx
-│   ├── article-form/
-│   │   └── ArticleForm.jsx
-│   ├── cards/
-│   │   ├── article-card/
-│   │   └── featured-article-card/
-│   ├── catalog/
-│   │   └── Catalog.jsx
-│   ├── category/
-│   │   └── Category.jsx
-│   ├── create-article/
-│   │   └── CreateArticle.jsx
-│   ├── edit-article/
-│   │   └── EditArticle.jsx
-│   ├── footer/
-│   │   └── Footer.jsx
-│   ├── header/
-│   │   └── Header.jsx
-│   ├── home/
-│   │   └── Home.jsx
-│   ├── login/
-│   │   └── Login.jsx
-│   ├── not-found/
-│   │   └── NotFound.jsx
-│   ├── register/
-│   │   └── Register.jsx
-│   ├── route-guards/
-│   │   ├── GuestRoute.jsx
-│   │   └── PrivateRoute.jsx
-│   ├── search/
-│   │   └── Search.jsx
-│   ├── section-header/
-│   │   └── SectionHeader.jsx
-│   └── sidebar/
-│       └── Sidebar.jsx
-│
 ├── contexts/
-│   ├── AuthContext.js
-│   └── AuthProvider.jsx
-│
 ├── hooks/
-│   └── useAuth.js
-│
 ├── lib/
-│   └── supabaseClient.js
-│
 ├── services/
-│   ├── articleService.js
-│   ├── authService.js
-│   └── imageService.js
-│
 ├── styles/
-│   ├── articles.css
-│   ├── footer.css
-│   ├── forms.css
-│   ├── header.css
-│   ├── sidebar.css
-│   ├── styles.css
-│   └── template.css
-│
 ├── utils/
-│   └── validation.js
-│
 ├── App.jsx
 └── Main.jsx
 ```
 
----
+The components contain the UI and page logic.
 
-## 🏠 Main Application Sections
+The service files contain the Supabase requests for articles, authentication, profiles, comments, feedback and images.
 
-The application currently contains content and navigation around these 3D printing categories:
+Authentication state is shared through `AuthContext`.
 
-- **3D Printers**
-- **Filaments**
-- **Print Settings**
-- **Projects**
+More information about the project structure can be found in:
 
-Users can browse all articles, open article details, browse by category, and search for articles.
+[ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ---
 
-## 🛠 Technologies Used
+# Run the Project Locally
 
-- **React**
-- **JavaScript**
-- **JSX**
-- **React Router**
-- **Vite**
-- **ESLint**
-- **Supabase Authentication**
-- **Supabase PostgreSQL**
-- **Supabase Storage**
-- **HTML**
-- **CSS**
+## 1. Clone the repository
 
----
+```bash
+git clone https://github.com/MartinNeikov/3D-printing-blog-.git
+```
 
-## ▶️ Run the Project Locally
+## 2. Open the project folder
 
-### 1. Install dependencies
+```bash
+cd 3D-printing-blog-
+```
+
+## 3. Install the dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configure Supabase environment variables
+## 4. Configure the environment variables
 
-Create a `.env.local` file in the project root:
+Create a `.env.local` file in the root folder.
+
+The required variables are shown in `.env.example`.
 
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
-The `.env.local` file is ignored by Git through the existing `*.local` rule in `.gitignore`.
-
-### 3. Start the development server
+## 5. Start the development server
 
 ```bash
 npm run dev
 ```
 
-### 4. Run ESLint
+## Other Commands
+
+Run ESLint:
 
 ```bash
 npm run lint
 ```
 
-### 5. Create a production build
+Create a production build:
 
 ```bash
 npm run build
 ```
 
----
+Preview the production build:
 
-## 🌐 Deployment
-
-A test deployment will be created with **Vercel**.
-
-The production frontend URL will be added here after the deployment is completed.
-
-**Frontend URL:** Pending
-
-The backend services are provided by **Supabase**, so no separate custom backend server deployment is required.
+```bash
+npm run preview
+```
 
 ---
 
-# 📖 Functional Guide
+# Functional Guide
 
 ## 1. Project Overview
 
 **Application Name:** PrintForge
 
-**Application Category / Topic:** Blog / 3D Printing Community
+**Application Category / Topic:** Blog / 3D Printing
 
-**Main Purpose:**  
-PrintForge is a web application for reading and sharing articles related to 3D printing. The application provides content about printers, filaments, print settings, projects, troubleshooting, guides, and reviews.
+### Main Purpose
 
-Registered users can create their own articles and manage the articles they own, while guests can browse the public content without access to protected actions.
+PrintForge is a blog application focused on 3D printing.
+
+Visitors can browse articles about different 3D printing topics such as printers, filaments, print settings and projects.
+
+Registered users can create their own articles and manage them. They can also comment on articles and vote whether an article was useful or not useful.
 
 ---
 
 ## 2. User Access & Permissions
 
-### Guest (Not Authenticated)
+### Guest
 
-Guests can access:
+A guest user can access the public parts of the application.
 
-- Home page
-- Article Catalog
+Available pages include:
+
+- Home
+- Articles Catalog
 - Article Details
 - Category pages
-- Search page
-- Login page
-- Register page
+- Search
+- Login
+- Register
 
-Guests can read public article data but cannot:
+Guests can read articles, comments and article feedback.
+
+Guests cannot:
 
 - Create articles
 - Edit articles
 - Delete articles
+- Open the Profile page
+- Create comments
+- Delete comments
+- Vote Useful / Not useful
 
 ### Authenticated User
 
+A logged-in user has access to all public pages and also to the private functionality.
+
 Authenticated users can:
 
-- Access all public pages
-- Create new articles
+- Create articles
 - Edit their own articles
 - Delete their own articles
-- Upload article images
-- Use an external image URL instead of uploading an image
+- Open their Profile page
+- Change their display name
+- Upload or replace their avatar
+- Add comments
+- Delete their own comments
+- Vote Useful or Not useful on articles
+- Change or remove their feedback
 
-Authenticated users cannot edit or delete articles created by another user.
+A user cannot edit or delete an article created by another user.
+
+A user also cannot delete comments created by another user.
 
 ---
 
@@ -279,28 +211,41 @@ Authenticated users cannot edit or delete articles created by another user.
 
 ### Authentication Flow
 
-- When the application loads, the current Supabase session is requested.
-- The session and current user are stored in `AuthProvider`.
-- Login uses Supabase email/password authentication.
-- Registration creates a real Supabase Auth user.
-- Logout ends the current Supabase session.
-- Authentication changes are monitored through the Supabase auth state listener.
+Authentication is handled by Supabase Auth.
+
+When the application starts, `AuthProvider` checks if there is an existing Supabase session.
+
+If a session exists, the current user is stored in the authentication context.
+
+Registration creates a new Supabase user using email and password.
+
+Login uses Supabase email and password authentication.
+
+Logout signs the current user out and clears the current session from the application state.
+
+The application also listens for authentication state changes with Supabase.
 
 ### Session Persistence
 
-Authentication state is shared through **Context API**.
+Supabase handles the persisted authentication session.
 
-Supabase manages the persisted authentication session, allowing the user to remain logged in after a page refresh.
+The session is restored when the page is refreshed.
+
+`AuthContext` is used to share the current user and authentication state across the React application.
+
+The custom `useAuth` hook is used by components that need access to the authentication data.
 
 ---
 
 ## 4. Routing Structure
 
-Current routes include:
+The application uses React Router for client-side routing.
+
+The main routes are:
 
 ```text
 /                              Home
-/articles                      Catalog
+/articles                      Articles Catalog
 /articles/create               Create Article
 /articles/:articleId           Article Details
 /articles/:articleId/edit      Edit Article
@@ -308,71 +253,147 @@ Current routes include:
 /search                        Search
 /login                         Login
 /register                      Register
+/profile                       Profile
 *                              Not Found
 ```
 
 ### Route Guards
 
-- `PrivateRoute` protects authenticated-only routes such as Create and Edit.
-- Guests who try to access protected routes are redirected to Login.
-- `GuestRoute` protects Login and Register from already authenticated users.
-- Logged-in users who try to open Login or Register are redirected to the Home page.
+`PrivateRoute` is used for pages that require authentication.
+
+Protected routes include:
+
+```text
+/articles/create
+/articles/:articleId/edit
+/profile
+```
+
+A guest trying to open one of these routes is redirected to Login.
+
+`GuestRoute` is used for:
+
+```text
+/login
+/register
+```
+
+If an already logged-in user tries to open Login or Register, the user is redirected away from these pages.
+
+### Nested and Parameterized Routes
+
+`AppLayout` is used as the main layout route and the application pages are rendered inside it.
+
+Parameterized routes include:
+
+```text
+/articles/:articleId
+/articles/:articleId/edit
+/categories/:categoryName
+```
+
+The article id and category name are read from the URL with `useParams`.
 
 ---
 
 ## 5. List → Details Flow
 
-Articles are loaded from Supabase instead of being hardcoded in the React application.
+### Catalog
 
-The Catalog displays multiple articles. Selecting an article navigates to:
+The Articles Catalog loads article data from Supabase.
+
+Each article shows basic information and contains a link to its details page.
+
+Articles can also be viewed by category.
+
+The Search page allows searching articles by title, category and short description.
+
+### Details Page
+
+When the user selects an article, React Router navigates to:
 
 ```text
 /articles/:articleId
 ```
 
-The Details page loads the selected article using its URL parameter.
+The article id is read from the URL and is used to request the correct article from Supabase.
 
-Category routes also use a URL parameter:
+The Article Details page displays:
 
-```text
-/categories/:categoryName
-```
+- Article title
+- Author
+- Author avatar
+- Published date
+- Updated date when the article has been edited
+- Article content
+- Article image
+- Useful / Not useful feedback
+- Comments
+
+Invalid article ids and missing articles are handled with the custom Not Found page.
 
 ---
 
-## 6. Backend / Remote Data
+## 6. Data Source & Backend
 
-The project uses **Supabase** as a Backend-as-a-Service.
+The project uses Supabase as a Backend-as-a-Service.
 
-Supabase currently provides:
+Supabase provides:
 
 - PostgreSQL database
 - Authentication
-- Row Level Security
 - File Storage
+- Row Level Security
 
-Article data is stored in the `articles` table and accessed through the Supabase JavaScript SDK.
+Because Supabase is a hosted service, there is no separate custom backend server that has to be deployed.
 
-Article images uploaded from the user's computer are stored in the `article-images` Storage bucket.
+The main database tables used by the application are:
+
+```text
+articles
+profiles
+comments
+article_feedback
+```
+
+The application also uses Supabase Storage buckets for:
+
+```text
+article-images
+avatars
+```
+
+The data is stored remotely and remains available after refreshing or reopening the application.
 
 ---
 
-## 7. CRUD Operations
+## 7. Data Operations (CRUD)
+
+The main CRUD collection in the project is `articles`.
 
 ### Create
 
-Authenticated users can create a new article through the Create Article form.
+A logged-in user can create an article from the Create Article page.
 
-An article can use either:
+The form contains:
 
-- an external image URL
-- an uploaded JPEG, PNG, or WebP image
+- Title
+- Category
+- Short description
+- Content
+- Image
 
-The article owner is assigned through the authenticated Supabase user ID.
+The user can use an external image URL or upload an image from the computer.
+
+Uploaded images are stored in Supabase Storage.
+
+Each article is connected to its authenticated author through `author_id`.
 
 ### Read
 
-Articles are loaded remotely from Supabase and displayed in:
+Article data is loaded from Supabase and displayed in different parts of the application.
+
+Articles are displayed on:
 
 - Home
 - Catalog
@@ -383,23 +404,46 @@ Articles are loaded remotely from Supabase and displayed in:
 
 ### Update
 
-Only the article owner can access the Edit action.
+The owner of an article can open the Edit page.
 
-The owner can update the article content and can:
+The existing article data is loaded into the form.
 
-- keep the current image
-- replace it with an external URL
-- upload a new image
+The user can update the text fields and can:
 
-When an uploaded image is replaced, the old Storage file is removed after a successful article update.
+- Keep the current image
+- Use a new external image URL
+- Upload a new image
+
+If an uploaded image is replaced, the old Storage file is deleted after the article is updated successfully.
 
 ### Delete
 
-Only the article owner can see and use the Delete action.
+Only the article owner can use the Delete action.
 
-After confirmation, the article is deleted from Supabase. If the article uses an uploaded Storage image, that file is also removed from the Storage bucket.
+Before deleting an article, the application asks for confirmation.
 
-Ownership is enforced both in the UI and through Supabase RLS policies.
+The article is removed from Supabase.
+
+If the article has an uploaded Storage image, the image is also removed.
+
+Article ownership is checked in the React application and is also protected by Supabase Row Level Security.
+
+### Other User Interactions
+
+Comments and article feedback are also stored in Supabase.
+
+Logged-in users can create comments and delete their own comments.
+
+Users can vote:
+
+```text
+Useful
+Not useful
+```
+
+A user can have one feedback record for an article.
+
+The vote can be changed or removed.
 
 ---
 
@@ -407,29 +451,75 @@ Ownership is enforced both in the UI and through Supabase RLS policies.
 
 ### Forms Used
 
-- Register form
-- Login form
-- Create Article form
-- Edit Article form
-- Search form
+The application contains the following forms:
 
-### Current Validation Rules
+- Register
+- Login
+- Create Article
+- Edit Article
+- Search
+- Profile
+- Add Comment
 
-Examples of implemented validation include:
+Create Article and Edit Article use a shared `ArticleForm` component.
 
-- Name is required and must contain at least 2 characters.
-- Email is required and must match a valid email format.
-- Password must contain at least 6 characters.
-- Password confirmation must match the password.
-- Article title must contain at least 5 characters.
-- Article category must be selected.
-- Short description must contain at least 20 characters.
-- Article content must contain at least 50 characters.
-- Image URL must use a valid `http://` or `https://` URL when URL mode is selected.
-- Uploaded files are limited to JPEG, PNG, and WebP.
-- Uploaded files are limited to 5 MB.
+### Validation Rules
 
-Forms use controlled inputs and React synthetic events.
+Some examples of validation in the project are:
+
+**Registration name**
+
+- Required
+- Minimum 2 characters
+
+**Email**
+
+- Required
+- Must match a valid email format
+
+**Password**
+
+- Minimum 6 characters
+- Confirm Password must match the password
+
+**Article title**
+
+- Minimum 5 characters
+
+**Article category**
+
+- A category must be selected
+
+**Short description**
+
+- Minimum 20 characters
+
+**Article content**
+
+- Minimum 50 characters
+
+**Article image URL**
+
+- Must be a valid `http://` or `https://` URL
+
+**Uploaded article images**
+
+- JPEG, PNG or WebP only
+- Maximum file size 5 MB
+
+**Profile avatar**
+
+- JPEG, PNG or WebP only
+- Maximum file size 5 MB
+
+**Comment**
+
+- Cannot be empty
+- Maximum 1000 characters
+
+The forms use controlled React inputs and React event handlers.
+
+Validation and API errors are shown to the user instead of crashing the application.
 
 ---
 
@@ -437,81 +527,141 @@ Forms use controlled inputs and React synthetic events.
 
 ### Hooks & Component Lifecycle
 
-The project currently uses:
+The project uses React hooks including:
 
-- `useState`
-- `useEffect`
-- `useContext`
-- `useRef`
-- `useNavigate`
-- `useParams`
-- custom `useAuth` hook
+```text
+useState
+useEffect
+useContext
+useRef
+useNavigate
+useParams
+useSearchParams
+```
 
-`useEffect` is used for remote data loading and authentication lifecycle behavior. Abort controllers are used when loading article data so requests can be cancelled when a component unmounts.
+There is also a custom `useAuth` hook.
+
+`useEffect` is used to load remote data and to handle authentication lifecycle behavior.
+
+For example, when a component loads article or comment data, an `AbortController` is created.
+
+When the component unmounts, the request can be cancelled:
+
+```js
+const controller = new AbortController();
+
+return () => {
+  controller.abort();
+};
+```
+
+`AuthProvider` also unsubscribes from the Supabase authentication listener when it unmounts.
 
 ### Context API
 
-`AuthContext` shares authentication information across the application, including:
+`AuthContext` stores shared authentication information.
 
-- current user
-- authentication state
-- loading state
-- login
-- register
-- logout
+It provides:
+
+- Current user
+- Current session
+- Authentication status
+- Loading status
+- Register
+- Login
+- Logout
+
+Components access this data through the `useAuth` hook.
 
 ### Component Styling
 
-The project uses external CSS files separated by application area, including article, form, header, footer, sidebar, and template styles.
+The project uses external CSS files.
+
+The styles are separated into files such as:
+
+```text
+articles.css
+forms.css
+header.css
+footer.css
+profile.css
+sidebar.css
+not-found.css
+template.css
+```
+
+`styles.css` imports the separate style files.
 
 ---
 
 ## 10. Typical User Flow
 
-A typical authenticated user can:
+A normal user flow can look like this:
 
-1. Open the application and browse existing articles.
-2. Register or log in.
-3. Create an article and choose an external image URL or upload an image.
-4. Open the created article from the Catalog.
-5. Edit the article because they are its owner.
-6. Replace or keep the current image.
-7. Delete the article when it is no longer needed.
-8. Log out.
+1. The user opens PrintForge and browses the available articles.
+2. The user opens an article and reads its content, comments and feedback.
+3. The user registers or logs in.
+4. After login, the user can create a new article.
+5. The user can later edit or delete their own article.
+6. The user can open the Profile page and change the display name or avatar.
+7. The user can add comments to other articles.
+8. The user can vote whether an article was Useful or Not useful.
+9. The user logs out when finished.
 
 ---
 
 ## 11. Error & Edge Case Handling
 
-The application currently handles:
+The application handles different error and edge cases.
 
-- Invalid registration input
-- Invalid article form input
+Examples include:
+
+- Invalid registration data
+- Login errors
+- Invalid article form data
 - Invalid image URLs
-- Unsupported image file types
-- Images larger than the configured limit
-- Authentication errors
-- Article loading errors
-- Article update errors
-- Article delete errors
+- Unsupported image types
+- Image files larger than 5 MB
+- Empty comments
+- Comments longer than 1000 characters
+- Failed article requests
+- Failed comment requests
+- Failed feedback requests
+- Failed profile updates
+- Empty search results
 - Missing articles
+- Invalid article UUIDs
 - Unauthorized Edit/Delete attempts
-- Loading states during remote requests
-- Cleanup of unused uploaded images after failed Create or Update operations
-- Cleanup of replaced and deleted article Storage images
+- Loading states while remote data is being requested
+
+The application also removes unused uploaded images if an article operation fails after the file has already been uploaded.
+
+A custom 404 page is displayed for unknown routes and invalid or missing article pages.
 
 ---
 
-## 🎨 Template Credits
+# Deployment
 
-The project UI is based on the **Blogy** template by **Untree.co**, distributed by **ThemeWagon**.
+The frontend is deployed with Vercel:
 
-The original template attribution is preserved in the project.
+https://printforge-xi-eight.vercel.app/
+
+The backend is hosted by Supabase.
+
+No separate custom backend server deployment is required because the project uses Supabase as a hosted Backend-as-a-Service.
 
 ---
 
-## 📝 Development Notes
+# Architecture Documentation
 
-This `README.md` is updated after major project milestones so that it reflects **only functionality that has actually been implemented**.
+A short description of the project architecture is available here:
 
-Comments, likes, profiles, final documentation, and the final production deployment are still planned and will be added in later development stages.
+[ARCHITECTURE.md](./ARCHITECTURE.md)
+
+---
+
+# Template Credits
+
+The UI started from the Blogy HTML template by Untree.co, distributed through ThemeWagon.
+
+The template was converted to React components and adapted for this project.
