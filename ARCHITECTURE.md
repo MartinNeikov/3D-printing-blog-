@@ -31,7 +31,7 @@ The main source code is inside the `src` folder.
 ```text
 src/
 ├── components/
-├── context/
+├── contexts/
 ├── hooks/
 ├── lib/
 ├── services/
