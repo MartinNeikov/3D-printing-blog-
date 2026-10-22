@@ -28,27 +28,7 @@ https://github.com/MartinNeikov/3D-printing-blog-
 
 ## Main Features
 
-- Public article catalog
-- Article details page
-- Article categories
-- Article search
-- User registration
-- Login and logout
-- Persistent user session
-- Create article
-- Edit own article
-- Delete own article
-- Article image upload
-- External article image URL
-- User profile
-- Display name and avatar
-- Comments
-- Delete own comments
-- Useful / Not useful article feedback
-- Custom 404 page
-- Protected routes
-- Guest-only routes
-- Supabase Row Level Security
+PrintForge is a 3D printing blog where users can browse articles, manage their own content and profile, comment, and leave Useful / Not useful feedback. The app also includes authentication, protected routes, image uploads, persistent sessions, a custom 404 page, and Supabase RLS.
 
 ## Project Structure
 
